@@ -1,0 +1,262 @@
+@model TicketDetailsViewModel
+@{
+    var t = Model.Ticket;
+    ViewData["Title"] = t.Title;
+
+    var hasActions = Model.CanStart || Model.CanResolve || Model.CanClose || Model.CanReopen;
+}
+
+<div class="pt-3">
+    <a class="hd-nav-link px-0" asp-action="Index">
+        <svg class="hd-icon me-1" style="transform: rotate(180deg)"><use href="#i-arrow" /></svg>
+        Back to tickets
+    </a>
+</div>
+
+<section class="hd-page-head pt-2">
+    <div class="flex-grow-1">
+        <span class="hd-ticket-number">TICKET #@DisplayFormat.ShortId(t.Id)</span>
+        <h1 class="hd-detail-title">@t.Title</h1>
+        <div class="hd-badge-row">
+            <partial name="_StatusBadge" model="t.Status" />
+            <partial name="_PriorityBadge" model="t.Priority" />
+            <span class="hd-tag is-muted">@t.DepartmentName</span>
+            @if (t.AssignedToName is null)
+            {
+                <span class="hd-tag is-muted">Unassigned</span>
+            }
+            else
+            {
+                <span class="hd-tag">Assigned to @t.AssignedToName</span>
+            }
+        </div>
+    </div>
+    @if (Model.CanEdit)
+    {
+        <a class="btn btn-hd-ghost" asp-action="Edit" asp-route-id="@t.Id">Edit details</a>
+    }
+</section>
+
+<div class="row g-4 align-items-start">
+    <div class="col-lg-8">
+        <section class="hd-card mb-4">
+            <p class="hd-card-kicker">The request</p>
+            <div class="hd-prose">@t.Description</div>
+        </section>
+
+        <section class="hd-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="hd-card-title mb-0">Conversation</h2>
+                <span class="hd-tag is-muted">@t.Comments.Count</span>
+            </div>
+
+            @if (t.Comments.Count == 0)
+            {
+                <p class="text-muted small mb-0">No comments yet. Start the conversation below.</p>
+            }
+            else
+            {
+                <div class="hd-thread">
+                    @foreach (var comment in t.Comments)
+                    {
+                        <article class="hd-comment @(comment.IsInternal ? "is-internal" : null)">
+                            <div class="hd-avatar">@comment.AuthorName[..1].ToUpperInvariant()</div>
+                            <div class="flex-grow-1">
+                                <div class="hd-comment-head">
+                                    <span class="hd-comment-author">@comment.AuthorName</span>
+                                    <span>@DisplayFormat.LocalDateTime(comment.CreatedAtUtc)</span>
+                                    @if (comment.IsInternal)
+                                    {
+                                        <span class="hd-tag">Internal</span>
+                                    }
+                                </div>
+                                <p class="hd-comment-body">@comment.Body</p>
+                            </div>
+                        </article>
+                    }
+                </div>
+            }
+
+            @if (Model.CanComment)
+            {
+                <form class="hd-composer" asp-action="AddComment" asp-route-id="@t.Id" method="post">
+                    <label class="form-label" for="commentBody">Add a comment</label>
+                    <textarea class="form-control" id="commentBody" name="Body" rows="3"
+                              hd-counted="@DomainConstraints.TicketComment.BodyMaxLength"
+                              required placeholder="Share an update, ask a question, or add context..."></textarea>
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-2">
+                        <div>
+                            @if (Model.IsStaff)
+                            {
+                                <div class="form-check mb-0">
+                                    <input class="form-check-input" type="checkbox" value="true" id="commentInternal" name="IsInternal" />
+                                    <label class="form-check-label small" for="commentInternal">
+                                        Internal note <span class="hd-muted">(staff only)</span>
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <button class="btn btn-hd-primary" type="submit">Post comment</button>
+                        </div>
+                    </div>
+                </form>
+            }
+            else
+            {
+                <div class="alert alert-secondary mt-3 mb-0 small" role="status">
+                    This ticket is closed. Reopen it to continue the conversation.
+                </div>
+            }
+        </section>
+    </div>
+
+    <aside class="col-lg-4">
+        <div class="hd-sidebar">
+            @if (Model.CanAssign)
+            {
+                <section class="hd-card">
+                    <p class="hd-card-kicker">Assignment</p>
+                    @if (Model.Technicians.Count == 0)
+                    {
+                        <p class="small text-muted mb-0">
+                            No technicians are available yet. Seed the Technician and Manager roles to enable assignment.
+                        </p>
+                    }
+                    else
+                    {
+                        <form asp-action="Assign" asp-route-id="@t.Id" method="post">
+                            <label class="form-label" for="technicianId">Technician</label>
+                            <select class="form-select mb-2" id="technicianId" name="technicianId" required>
+                                <option value="">Choose a technician...</option>
+                                @foreach (var technician in Model.Technicians)
+                                {
+                                    <option value="@technician.Id" selected="@(t.AssignedToId == technician.Id ? "selected" : null)">
+                                        @technician.FullName
+                                    </option>
+                                }
+                            </select>
+                            <button class="btn btn-hd-primary w-100" type="submit">Assign ticket</button>
+                        </form>
+                    }
+
+                    @if (Model.CanUnassign)
+                    {
+                        <form asp-action="Unassign" asp-route-id="@t.Id" method="post"
+                              class="mt-2" data-confirm="Return this ticket to the unassigned queue?">
+                            <button class="btn btn-hd-ghost w-100" type="submit">Unassign</button>
+                        </form>
+                    }
+                </section>
+            }
+
+            @if (hasActions)
+            {
+                <section class="hd-card">
+                    <p class="hd-card-kicker">Actions</p>
+                    <div class="hd-action-stack">
+                        @if (Model.CanStart)
+                        {
+                            <form asp-action="Start" asp-route-id="@t.Id" method="post">
+                                <button class="btn btn-hd-primary w-100" type="submit">Start work</button>
+                            </form>
+                        }
+                        @if (Model.CanResolve)
+                        {
+                            <form asp-action="Resolve" asp-route-id="@t.Id" method="post"
+                                  data-confirm="Mark this ticket as resolved? The requester can reopen it if needed.">
+                                <button class="btn btn-hd-primary w-100" type="submit">Mark resolved</button>
+                            </form>
+                        }
+                        @if (Model.CanClose)
+                        {
+                            <form asp-action="Close" asp-route-id="@t.Id" method="post"
+                                  data-confirm="Close this ticket? The conversation will be locked until it is reopened.">
+                                <button class="btn btn-hd-primary w-100" type="submit">Close ticket</button>
+                            </form>
+                        }
+                        @if (Model.CanReopen)
+                        {
+                            <form asp-action="Reopen" asp-route-id="@t.Id" method="post"
+                                  data-confirm="Reopen this ticket and continue working on it?">
+                                <button class="btn btn-hd-ghost w-100" type="submit">Reopen ticket</button>
+                            </form>
+                        }
+                    </div>
+                </section>
+            }
+
+            <section class="hd-card">
+                <p class="hd-card-kicker">Details</p>
+                <div class="hd-meta">
+                    <div class="hd-meta-row">
+                        <span class="hd-meta-label">Requester</span>
+                        <span class="hd-meta-value">@t.CreatedByName</span>
+                    </div>
+                    <div class="hd-meta-row">
+                        <span class="hd-meta-label">Department</span>
+                        <span class="hd-meta-value">@t.DepartmentName</span>
+                    </div>
+                    <div class="hd-meta-row">
+                        <span class="hd-meta-label">Assignee</span>
+                        <span class="hd-meta-value">@(t.AssignedToName ?? "Unassigned")</span>
+                    </div>
+                    <div class="hd-meta-row">
+                        <span class="hd-meta-label">Opened</span>
+                        <span class="hd-meta-value">@DisplayFormat.LocalDateTime(t.CreatedAtUtc)</span>
+                    </div>
+                    @if (t.UpdatedAtUtc is not null)
+                    {
+                        <div class="hd-meta-row">
+                            <span class="hd-meta-label">Updated</span>
+                            <span class="hd-meta-value">@DisplayFormat.LocalDateTime(t.UpdatedAtUtc.Value)</span>
+                        </div>
+                    }
+                    @if (t.ResolvedAtUtc is not null)
+                    {
+                        <div class="hd-meta-row">
+                            <span class="hd-meta-label">Resolved</span>
+                            <span class="hd-meta-value">@DisplayFormat.LocalDateTime(t.ResolvedAtUtc.Value)</span>
+                        </div>
+                    }
+                    @if (t.ClosedAtUtc is not null)
+                    {
+                        <div class="hd-meta-row">
+                            <span class="hd-meta-label">Closed</span>
+                            <span class="hd-meta-value">@DisplayFormat.LocalDateTime(t.ClosedAtUtc.Value)</span>
+                        </div>
+                    }
+                </div>
+            </section>
+
+            <section class="hd-card">
+                <p class="hd-card-kicker">History</p>
+                @if (t.History.Count == 0)
+                {
+                    <p class="small text-muted mb-0">No activity recorded.</p>
+                }
+                else
+                {
+                    <ul class="hd-history">
+                        @foreach (var entry in t.History)
+                        {
+                            <li>
+                                <span class="hd-history-text">
+                                    @if (entry.FromStatus is null)
+                                    {
+                                        <text>Created as <strong>@DisplayFormat.StatusLabel(entry.ToStatus)</strong></text>
+                                    }
+                                    else
+                                    {
+                                        <text>@DisplayFormat.StatusLabel(entry.FromStatus.Value) → <strong>@DisplayFormat.StatusLabel(entry.ToStatus)</strong></text>
+                                    }
+                                </span>
+                                <span class="hd-history-time">@entry.ChangedByName · @DisplayFormat.LocalDateTime(entry.ChangedAtUtc)</span>
+                            </li>
+                        }
+                    </ul>
+                }
+            </section>
+        </div>
+    </aside>
+</div>

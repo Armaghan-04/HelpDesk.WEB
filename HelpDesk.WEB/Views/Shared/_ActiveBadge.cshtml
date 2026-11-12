@@ -1,0 +1,8 @@
+@model bool
+
+@{
+    var cssClass = Model ? "is-resolved" : "is-closed";
+    var label = Model ? "Active" : "Inactive";
+}
+
+<span class="hd-badge @cssClass"><span class="hd-dot"></span>@label</span>

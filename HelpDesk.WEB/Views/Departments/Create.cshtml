@@ -1,0 +1,36 @@
+@model DepartmentFormViewModel
+@{
+    ViewData["Title"] = "New department";
+    ViewData["SubmitLabel"] = "Create department";
+}
+
+<section class="hd-page-head">
+    <div>
+        <span class="hd-eyebrow">Administration</span>
+        <h1 class="hd-display">New department</h1>
+        <p class="hd-lead">New departments are active immediately and can receive tickets.</p>
+    </div>
+    <a class="btn btn-hd-ghost" asp-action="Index">Back to departments</a>
+</section>
+
+<div class="row g-4 align-items-start">
+    <div class="col-lg-8">
+        <partial name="_DepartmentForm" model="Model" />
+    </div>
+
+    <div class="col-lg-4">
+        <aside class="hd-card">
+            <p class="hd-card-kicker">Before you create</p>
+            <ul class="small text-muted ps-3 mb-0" style="line-height: 1.8;">
+                <li>Names must be unique — case does not matter.</li>
+                <li>Pick a name employees will recognize on the ticket form.</li>
+                <li>Use the description to explain which requests belong here.</li>
+                <li>You can edit or deactivate the department later.</li>
+            </ul>
+        </aside>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

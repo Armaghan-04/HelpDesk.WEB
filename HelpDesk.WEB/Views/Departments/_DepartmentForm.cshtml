@@ -1,0 +1,32 @@
+@model DepartmentFormViewModel
+@{
+    var action = Model.IsEdit ? "Edit" : "Create";
+    ViewData["SubmitDisabled"] = false;
+}
+
+<form method="post" asp-action="@action" asp-route-id="@(Model.IsEdit ? Model.Id : null)" class="hd-card">
+    <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+    <div class="mb-3">
+        <label class="form-label" asp-for="Name">Name</label>
+        <input class="form-control" asp-for="Name" maxlength="@DomainConstraints.Department.NameMaxLength"
+               placeholder="e.g. IT Support" autocomplete="off" />
+        <span class="field-validation-error" asp-validation-for="Name"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label" asp-for="Description">Description</label>
+        <textarea class="form-control" asp-for="Description" rows="4"
+                  hd-counted="@DomainConstraints.Department.DescriptionMaxLength"
+                  placeholder="What kinds of requests belong here?"></textarea>
+    </div>
+
+    @if (Model.IsEdit)
+    {
+        <div class="alert alert-warning mt-3 mb-0 small" role="note">
+            Deactivating this department never deletes it or removes it from existing tickets.
+        </div>
+    }
+
+    <partial name="_FormActions" />
+</form>

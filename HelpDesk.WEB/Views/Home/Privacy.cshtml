@@ -1,0 +1,114 @@
+﻿@{
+    ViewData["Title"] = "Privacy";
+    var canCreate = User.Identity?.IsAuthenticated != true || User.IsInRole(Roles.Employee);
+}
+
+<section class="hd-page-head">
+    <div>
+        <span class="hd-eyebrow">Legal</span>
+        <h1 class="hd-display">Privacy</h1>
+        <p class="hd-lead">What this help desk stores, why it stores it, and who can see it.</p>
+    </div>
+    <span class="hd-tag is-muted">Last updated 4 November 2026</span>
+</section>
+
+<div class="row g-4 align-items-start pb-4">
+    <div class="col-lg-8">
+        <article class="hd-card mb-4">
+            <p class="hd-card-kicker">The short version</p>
+            <p class="hd-prose mb-0">
+                HelpDesk keeps the account details and support conversations needed to raise,
+                route, and resolve requests. It does not sell your data or use it for advertising.
+            </p>
+        </article>
+
+        <article class="hd-card mb-4">
+            <h2 class="hd-card-title">What we store</h2>
+            <ul class="hd-privacy-list">
+                <li><strong>Account details:</strong> your name, email address, department, role, and the date your account was created.</li>
+                <li><strong>Ticket content:</strong> the title, description, department, priority, status, requester, assignee, and timestamps for every request.</li>
+                <li><strong>Conversation:</strong> comments and internal staff notes attached to a ticket, including who wrote them and when.</li>
+                <li><strong>History:</strong> status changes recorded so handovers and resolution steps stay visible.</li>
+            </ul>
+        </article>
+
+        <article class="hd-card mb-4">
+            <h2 class="hd-card-title">Why we use it</h2>
+            <p class="hd-prose mb-0">
+                The data is used to authenticate you, show the tickets you are allowed to see,
+                route requests to the right department, keep a shared conversation history, and
+                let managers manage access. It is not used for profiling or marketing.
+            </p>
+        </article>
+
+        <article class="hd-card mb-4">
+            <h2 class="hd-card-title">Who can see it</h2>
+            <p class="hd-prose mb-0">
+                Employees can see the tickets they created. Technicians and managers can see the
+                wider queue, and managers can see team and role information. Internal comments are
+                visible to staff only. Access is enforced by the application on every request, not
+                just by hiding buttons.
+            </p>
+        </article>
+
+        <article class="hd-card mb-4">
+            <h2 class="hd-card-title">Cookies and sign-in</h2>
+            <p class="hd-prose mb-0">
+                The application uses essential cookies for authentication and form security.
+                There are no advertising or third-party analytics cookies in this project.
+            </p>
+        </article>
+
+        <article class="hd-card">
+            <h2 class="hd-card-title">Retention and your choices</h2>
+            <p class="hd-prose mb-0">
+                Records are kept while the help desk is in use. There is no automated deletion
+                schedule; removal is handled by the team that operates the application. To ask
+                about, correct, or remove your information, contact your manager or the IT Support
+                department.
+            </p>
+        </article>
+    </div>
+
+    <aside class="col-lg-4">
+        <div class="hd-sidebar">
+            <section class="hd-card">
+                <p class="hd-card-kicker">At a glance</p>
+                <div class="hd-meta">
+                    <div class="hd-meta-row">
+                        <span class="hd-meta-label">Data collected</span>
+                        <span class="hd-meta-value">Account and ticket data</span>
+                    </div>
+                    <div class="hd-meta-row">
+                        <span class="hd-meta-label">Used for</span>
+                        <span class="hd-meta-value">Support operations</span>
+                    </div>
+                    <div class="hd-meta-row">
+                        <span class="hd-meta-label">Sold or shared</span>
+                        <span class="hd-meta-value">No</span>
+                    </div>
+                    <div class="hd-meta-row">
+                        <span class="hd-meta-label">Analytics cookies</span>
+                        <span class="hd-meta-value">None</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="hd-card">
+                <p class="hd-card-kicker">Questions</p>
+                <p class="small text-muted mb-3">
+                    Ask your manager or the IT Support department if you need a copy of your data
+                    or want something corrected.
+                </p>
+                @if (canCreate)
+                {
+                    <a class="btn btn-hd-ghost w-100" asp-controller="Tickets" asp-action="Create">Open a request</a>
+                }
+                else
+                {
+                    <a class="btn btn-hd-ghost w-100" asp-controller="Tickets" asp-action="Index">View tickets</a>
+                }
+            </section>
+        </div>
+    </aside>
+</div>

@@ -1,0 +1,12 @@
+@model TicketPriority
+@{
+    var cssClass = Model switch
+    {
+        TicketPriority.Low => "is-low",
+        TicketPriority.Medium => "is-medium",
+        TicketPriority.High => "is-high",
+        TicketPriority.Critical => "is-critical",
+        _ => string.Empty
+    };
+}
+<span class="hd-priority @cssClass">@Model</span>

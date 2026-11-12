@@ -1,0 +1,50 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using HelpDesk.WEB.Models.Entities
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+@inject IOptions<AuthenticationSettings> AuthenticationOptions
+
+@if (SignInManager.IsSignedIn(User))
+{
+    var account = await UserManager.GetUserAsync(User);
+    var displayName = account?.FullName ?? User.Identity?.Name ?? "Account";
+    var initial = displayName.Length > 0 ? displayName[..1].ToUpperInvariant() : "?";
+    IList<string> roles = account is null ? new List<string>() : await UserManager.GetRolesAsync(account);
+    var roleName = roles.Count > 0 ? roles[0] : Roles.Employee;
+    var roleClass = DisplayFormat.RoleCssClass(roleName);
+
+    <div class="dropdown">
+        <button class="btn hd-user dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="hd-avatar">@initial</span>
+            <span class="hd-user-name d-none d-lg-inline">@displayName</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end hd-dropdown">
+            <li>
+                <span class="dropdown-header">
+                    Signed in as<br /><strong>@User.Identity?.Name</strong><br />
+                    <span class="hd-role-badge @roleClass mt-1">@roleName</span>
+                </span>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Account settings</a>
+            </li>
+            <li>
+                <form asp-area="Identity" asp-page="/Account/Logout"
+                      asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <button type="submit" class="dropdown-item">Sign out</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+}
+else
+{
+    <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+        @if (AuthenticationOptions.Value.Registration.Enabled)
+        {
+            <a class="nav-link hd-nav-link" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        }
+        <a class="btn btn-hd-primary btn-sm" asp-area="Identity" asp-page="/Account/Login">Sign in</a>
+    </div>
+}

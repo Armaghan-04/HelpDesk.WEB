@@ -1,0 +1,44 @@
+@page
+@using HelpDesk.WEB.Areas.Identity.Pages.Account.Manage
+@model IndexModel
+@{
+    ViewData["Title"] = "Profile";
+    ViewData["ActivePage"] = "Index";
+    Layout = "/Areas/Identity/Pages/Account/Manage/_Layout.cshtml";
+}
+
+<div class="hd-manage-heading">
+    <div>
+        <p class="hd-card-kicker">Profile</p>
+        <h2 class="hd-card-title">Your account</h2>
+    </div>
+    <div>
+        @foreach (var role in Model.Roles)
+        {
+            <span class="hd-role-badge @DisplayFormat.RoleCssClass(role)">@role</span>
+        }
+    </div>
+</div>
+
+<dl class="hd-meta">
+    <div class="hd-meta-row">
+        <span class="hd-meta-label">Full name</span>
+        <span class="hd-meta-value">@Model.FullName</span>
+    </div>
+    <div class="hd-meta-row">
+        <span class="hd-meta-label">Email</span>
+        <span class="hd-meta-value">@(Model.Email ?? "—")</span>
+    </div>
+    <div class="hd-meta-row">
+        <span class="hd-meta-label">Username</span>
+        <span class="hd-meta-value">@(Model.Username ?? "—")</span>
+    </div>
+    <div class="hd-meta-row">
+        <span class="hd-meta-label">Member since</span>
+        <span class="hd-meta-value">@DisplayFormat.LocalDate(Model.CreatedAtUtc)</span>
+    </div>
+</dl>
+
+<p class="hd-muted small mt-3 mb-0">
+    Email addresses can't be changed from this page.
+</p>

@@ -1,0 +1,24 @@
+@{
+    var activePage = ViewData["ActivePage"] as string
+        ?? System.IO.Path.GetFileNameWithoutExtension(ViewContext.ActionDescriptor.DisplayName);
+
+    string NavClass(string page)
+        => string.Equals(activePage, page, StringComparison.OrdinalIgnoreCase) ? "active" : string.Empty;
+
+    string? AriaCurrent(string page)
+        => string.Equals(activePage, page, StringComparison.OrdinalIgnoreCase) ? "page" : null;
+}
+
+<nav aria-label="Account settings">
+    <ul class="nav nav-pills flex-column hd-manage-nav-list">
+        <li class="nav-item">
+            <a class="nav-link @NavClass("Index")" aria-current="@AriaCurrent("Index")" asp-page="./Index">Profile</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @NavClass("ChangePassword")" aria-current="@AriaCurrent("ChangePassword")" asp-page="./ChangePassword">Password</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @NavClass("PersonalData")" aria-current="@AriaCurrent("PersonalData")" asp-page="./PersonalData">Personal data</a>
+        </li>
+    </ul>
+</nav>

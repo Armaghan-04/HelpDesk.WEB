@@ -1,0 +1,203 @@
+@model TeamIndexViewModel
+@{
+    ViewData["Title"] = "Team";
+
+    var pagination = new PaginationViewModel
+    {
+        Pagination = Model.Pagination,
+        Action = "Index",
+        RouteValues = PaginationViewModel.BuildRouteValues(
+            ("search", Model.Search),
+            ("role", Model.Role),
+            ("isActive", Model.IsActive?.ToString()),
+            ("sort", Model.Sort.ToString())),
+        AriaLabel = "Team pagination",
+        ItemNounSingular = "person",
+        ItemNounPlural = "people"
+    };
+}
+
+@functions {
+    static string SortLabel(TeamSortOption sort) => sort switch
+    {
+        TeamSortOption.NameDesc => "Name (Z–A)",
+        TeamSortOption.EmailAsc => "Email (A–Z)",
+        TeamSortOption.EmailDesc => "Email (Z–A)",
+        TeamSortOption.JoinedDesc => "Newest joined",
+        TeamSortOption.JoinedAsc => "Oldest joined",
+        _ => "Name (A–Z)"
+    };
+}
+
+<section class="hd-page-head">
+    <div>
+        <span class="hd-eyebrow">People &amp; access</span>
+        <h1 class="hd-display">Team</h1>
+        <p class="hd-lead">
+            @Model.Pagination.TotalCount @(Model.Pagination.TotalCount == 1 ? "person matches" : "people match")
+            this view. Everyone starts as an Employee. Promote people to Technician or Manager
+            when their responsibilities grow.
+        </p>
+    </div>
+    <a class="btn btn-hd-ghost" asp-controller="Tickets" asp-action="Index">Back to tickets</a>
+</section>
+
+<form hd-filter asp-action="Index">
+    <partial name="_FilterSearch" model="@(new FilterSearchViewModel
+    {
+        Label = "Search people",
+        Placeholder = "Name or email...",
+        Value = Model.Search
+    })" />
+
+    <div class="col-6 col-lg-2">
+        <label class="form-label" asp-for="Role">Role</label>
+        <select class="form-select" asp-for="Role">
+            <option value="">Any role</option>
+            @foreach (var roleOption in Roles.All)
+            {
+                <option value="@roleOption" selected="@(Model.Role == roleOption ? "selected" : null)">@roleOption</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-6 col-lg-2">
+        <label class="form-label" asp-for="IsActive">Status</label>
+        <select class="form-select" asp-for="IsActive">
+            <option value="">Any status</option>
+            <option value="true" selected="@(Model.IsActive == true ? "selected" : null)">Active</option>
+            <option value="false" selected="@(Model.IsActive == false ? "selected" : null)">Inactive</option>
+        </select>
+    </div>
+
+    <div class="col-12 col-lg-2">
+        <label class="form-label" asp-for="Sort">Sort by</label>
+        <select class="form-select" asp-for="Sort">
+            @foreach (var sortOption in Enum.GetValues<TeamSortOption>())
+            {
+                <option value="@sortOption" selected="@(Model.Sort == sortOption ? "selected" : null)">@SortLabel(sortOption)</option>
+            }
+        </select>
+    </div>
+
+    <partial name="_FilterActions" />
+</form>
+
+@if (Model.Members.Count == 0)
+{
+    <partial name="_EmptyState" model="@(new EmptyStateViewModel
+    {
+        IconId = "i-user",
+        Title = "No people found",
+        Message = "Try a different name, role, or status."
+    })" />
+}
+else
+{
+    <div class="hd-card hd-card-flush">
+        <div class="table-responsive">
+            <table class="table hd-table align-middle">
+                <thead>
+                    <tr>
+                        <th scope="col">Person</th>
+                        <th scope="col">Role</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Department</th>
+                        <th scope="col">Joined</th>
+                        <th scope="col" class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var member in Model.Members)
+                    {
+                        var isSelf = member.Id == Model.CurrentUserId;
+                        var isLastActiveManager = member.IsActive
+                            && member.Roles.Contains(Roles.Manager)
+                            && Model.ActiveManagerCount <= 1;
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="hd-avatar-sm">@member.FullName[..1].ToUpperInvariant()</span>
+                                    <div>
+                                        <div class="fw-semibold">
+                                            @member.FullName
+                                            @if (isSelf)
+                                            {
+                                                <span class="hd-tag is-muted ms-1">You</span>
+                                            }
+                                        </div>
+                                        <div class="hd-ticket-sub">@member.Email</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                @if (member.Roles.Count == 0)
+                                {
+                                    <span class="hd-role-badge is-none">No role</span>
+                                }
+                                else
+                                {
+                                    foreach (var role in member.Roles)
+                                    {
+                                        <span class="hd-role-badge @DisplayFormat.RoleCssClass(role)">@role</span>
+                                    }
+                                }
+                            </td>
+                            <td><partial name="_ActiveBadge" model="@member.IsActive" /></td>
+                            <td class="small">@(member.DepartmentName ?? "—")</td>
+                            <td class="text-muted small">@DisplayFormat.LocalDate(member.CreatedAtUtc)</td>
+                            <td>
+                                @if (isSelf)
+                                {
+                                    <div class="text-end hd-muted small">Ask another manager</div>
+                                }
+                                else
+                                {
+                                    <div class="d-flex flex-column align-items-end gap-2">
+                                        <form asp-action="ChangeRole" asp-route-id="@member.Id" method="post" class="hd-role-form">
+                                            <select class="form-select form-select-sm" name="role"
+                                                    aria-label="Role for @member.FullName">
+                                                @foreach (var role in Roles.All)
+                                                {
+                                                    <option value="@role" selected="@(member.PrimaryRole == role ? "selected" : null)">@role</option>
+                                                }
+                                            </select>
+                                            <button class="btn btn-hd-ghost btn-sm" type="submit">Update</button>
+                                        </form>
+
+                                        @if (member.IsActive)
+                                        {
+                                            <form asp-action="Deactivate" asp-route-id="@member.Id" method="post"
+                                                  data-confirm="Deactivate @member.FullName? They will be signed out and cannot sign in again until reactivated. Ticket history is preserved.">
+                                                <button type="submit" class="btn btn-hd-danger btn-sm"
+                                                        disabled="@(isLastActiveManager ? "disabled" : null)"
+                                                        title="@(isLastActiveManager ? "At least one active manager must remain." : null)">
+                                                    Deactivate
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <form asp-action="Activate" asp-route-id="@member.Id" method="post">
+                                                <button type="submit" class="btn btn-hd-primary btn-sm">Activate</button>
+                                            </form>
+                                        }
+                                    </div>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <partial name="_Pagination" model="pagination" />
+
+    <p class="hd-muted small mt-3 mb-0">
+        Role and account changes are applied immediately in the database. A signed-in person picks
+        up their new permissions on their next sign-in, or within about a minute. Deactivating an
+        account never deletes it: roles and ticket history are preserved, and the person can be
+        reactivated later.
+    </p>
+}

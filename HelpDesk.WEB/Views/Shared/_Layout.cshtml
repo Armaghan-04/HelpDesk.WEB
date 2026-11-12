@@ -1,0 +1,111 @@
+﻿@{
+    var isIdentityArea = string.Equals(
+        ViewContext.RouteData.Values["area"] as string,
+        "Identity",
+        StringComparison.OrdinalIgnoreCase);
+}
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#F4F3EE" />
+    <title>@ViewData["Title"] · HelpDesk</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="hd-body @(isIdentityArea ? "hd-identity" : null)">
+    <a class="hd-skip" href="#main-content">Skip to content</a>
+
+    <svg xmlns="http://www.w3.org/2000/svg" class="d-none" aria-hidden="true">
+        <symbol id="i-plus" viewBox="0 0 16 16"><path d="M8 2a.75.75 0 0 1 .75.75v4.5h4.5a.75.75 0 0 1 0 1.5h-4.5v4.5a.75.75 0 0 1-1.5 0v-4.5h-4.5a.75.75 0 0 1 0-1.5h4.5v-4.5A.75.75 0 0 1 8 2Z"/></symbol>
+        <symbol id="i-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.867-3.834Zm-5.242.156a5 5 0 1 1 0-10 5 5 0 0 1 0 10Z"/></symbol>
+        <symbol id="i-ticket" viewBox="0 0 16 16"><path d="M0 4.5A1.5 1.5 0 0 1 1.5 3h13A1.5 1.5 0 0 1 16 4.5v1a2.5 2.5 0 0 0 0 5v1a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 11.5v-1a2.5 2.5 0 0 0 0-5v-1Z"/></symbol>
+        <symbol id="i-arrow" viewBox="0 0 16 16"><path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 1 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 1 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8Z"/></symbol>
+        <symbol id="i-user" viewBox="0 0 16 16"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm6 5c0-2.21-2.686-4-6-4s-6 1.79-6 4v1h12v-1Z"/></symbol>
+    </svg>
+
+    <header class="hd-header">
+        <nav class="navbar navbar-expand-lg hd-navbar">
+            <div class="container">
+                <a class="navbar-brand hd-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <span class="hd-brand-mark">HD</span>
+                    <span class="hd-brand-text">HelpDesk<span class="hd-brand-dot">.</span></span>
+                </a>
+
+                <button class="navbar-toggler hd-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+                        aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="mainNav">
+                    @{
+                        var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? string.Empty;
+                        var onHome = string.Equals(currentController, "Home", StringComparison.OrdinalIgnoreCase);
+                        var onTickets = string.Equals(currentController, "Tickets", StringComparison.OrdinalIgnoreCase);
+                        var onTeam = string.Equals(currentController, "Users", StringComparison.OrdinalIgnoreCase);
+                        var onDepartments = string.Equals(currentController, "Departments", StringComparison.OrdinalIgnoreCase);
+                    }
+                    <ul class="navbar-nav hd-nav ms-lg-4 me-lg-auto gap-lg-1">
+                        <li class="nav-item">
+                            <a class="nav-link @(onHome ? "active" : null)" aria-current="@(onHome ? "page" : null)" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(onTickets ? "active" : null)" aria-current="@(onTickets ? "page" : null)" asp-area="" asp-controller="Tickets" asp-action="Index">Tickets</a>
+                        </li>
+                        @if (User.IsInRole(Roles.Manager))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link @(onTeam ? "active" : null)" aria-current="@(onTeam ? "page" : null)" asp-area="" asp-controller="Users" asp-action="Index">Team</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(onDepartments ? "active" : null)" aria-current="@(onDepartments ? "page" : null)" asp-area="" asp-controller="Departments" asp-action="Index">Departments</a>
+                            </li>
+                        }
+                    </ul>
+
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main id="main-content" class="hd-main" role="main">
+        <div class="container">
+            @RenderBody()
+        </div>
+    </main>
+
+    <footer class="hd-footer">
+        <div class="container hd-footer-inner">
+            <span>&copy; @DateTime.Now.Year HelpDesk. A quieter way to get things fixed.</span>
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <partial name="_FlashMessages" />
+
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content hd-modal">
+                <div class="modal-header">
+                    <h2 class="modal-title h5" id="confirmTitle">Please confirm</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-0 text-muted" id="confirmMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-hd-ghost" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-hd-danger" id="confirmAccept">Yes, continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

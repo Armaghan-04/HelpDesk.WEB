@@ -1,0 +1,43 @@
+@model PaginationViewModel
+@{
+    var pagination = Model.Pagination;
+}
+
+<nav class="hd-pagination mt-4" aria-label="@Model.AriaLabel">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <p class="hd-muted small mb-0">@Model.SummaryText</p>
+
+        @if (pagination.TotalPages > 1)
+        {
+            var startPage = Math.Max(1, pagination.Page - 2);
+            var endPage = Math.Min(pagination.TotalPages, startPage + 4);
+            startPage = Math.Max(1, endPage - 4);
+
+            <ul class="pagination pagination-sm mb-0">
+                <li class="page-item @(pagination.HasPreviousPage ? null : "disabled")">
+                    <a class="page-link" asp-action="@Model.Action" asp-controller="@Model.Controller"
+                       asp-all-route-data="@Model.RouteValues"
+                       asp-route-page="@(pagination.Page - 1)"
+                       aria-label="Previous page">Previous</a>
+                </li>
+
+                @for (int pageNumber = startPage; pageNumber <= endPage; pageNumber++)
+                {
+                    <li class="page-item @(pageNumber == pagination.Page ? "active" : null)">
+                        <a class="page-link" asp-action="@Model.Action" asp-controller="@Model.Controller"
+                           asp-all-route-data="@Model.RouteValues"
+                           asp-route-page="@pageNumber"
+                           aria-label="Page @pageNumber">@pageNumber</a>
+                    </li>
+                }
+
+                <li class="page-item @(pagination.HasNextPage ? null : "disabled")">
+                    <a class="page-link" asp-action="@Model.Action" asp-controller="@Model.Controller"
+                       asp-all-route-data="@Model.RouteValues"
+                       asp-route-page="@(pagination.Page + 1)"
+                       aria-label="Next page">Next</a>
+                </li>
+            </ul>
+        }
+    </div>
+</nav>

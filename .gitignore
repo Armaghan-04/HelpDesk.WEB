@@ -1,0 +1,114 @@
+# ---------------------------------------------------------------------------
+# Build output and publish artifacts
+# ---------------------------------------------------------------------------
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+artifacts/
+publish/
+*.publishproj
+*.publishsettings
+
+# ---------------------------------------------------------------------------
+# Visual Studio / IDE state and user-specific files
+# ---------------------------------------------------------------------------
+.vs/
+.vscode/*.user
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+*.rsuser
+*.dbmdl
+*.dbproj.schemaview
+*.jfm
+*.pfx
+*.p12
+*.snk
+*.vshost.exe
+*.vshost.exe.config
+*.vshost.exe.manifest
+*.VisualState.xml
+*.cache
+*.tlog
+*.vspscc
+*.vssscc
+_Chutzpah*
+
+# ReSharper / Rider
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# Visual Studio service dependency metadata (machine-specific state)
+serviceDependencies.local.json.user
+serviceDependencies.local.json
+
+# ---------------------------------------------------------------------------
+# Test results and coverage
+# ---------------------------------------------------------------------------
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.trx
+*.coverage
+*.coveragexml
+coverage/
+coverage.*
+TestResults/
+
+# ---------------------------------------------------------------------------
+# NuGet
+# ---------------------------------------------------------------------------
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+
+# ---------------------------------------------------------------------------
+# Local environment and secret files
+# ---------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+appsettings.*.local.json
+appsettings.Local.json
+secrets.json
+*.secret.json
+*.pubxml
+*.pubxml.user
+
+# ---------------------------------------------------------------------------
+# Logs and temporary files
+# ---------------------------------------------------------------------------
+*.log
+*.tlog
+*.svclog
+*.sbr
+logs/
+Logs/
+tmp/
+temp/
+
+# ---------------------------------------------------------------------------
+# Operating system files
+# ---------------------------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/

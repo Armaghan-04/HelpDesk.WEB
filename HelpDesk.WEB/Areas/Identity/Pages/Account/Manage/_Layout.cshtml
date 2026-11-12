@@ -1,0 +1,29 @@
+@{
+    Layout = ViewData["ParentLayout"] as string ?? "/Views/Shared/_Layout.cshtml";
+}
+
+<section class="hd-page-head">
+    <div>
+        <span class="hd-eyebrow">Account</span>
+        <h1 class="hd-display">Account settings</h1>
+        <p class="hd-lead">Manage how you sign in and the details attached to your help-desk account.</p>
+    </div>
+    <a class="btn btn-hd-ghost" asp-controller="Tickets" asp-action="Index">Back to tickets</a>
+</section>
+
+<div class="row g-4 align-items-start pb-4">
+    <aside class="col-lg-3">
+        <div class="hd-card hd-manage-nav">
+            <partial name="_ManageNav" />
+        </div>
+    </aside>
+    <div class="col-lg-9">
+        <div class="hd-card hd-manage-content">
+            @RenderBody()
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await RenderSectionAsync("Scripts", required: false)
+}

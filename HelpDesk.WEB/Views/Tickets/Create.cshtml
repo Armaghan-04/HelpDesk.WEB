@@ -1,0 +1,35 @@
+@model TicketFormViewModel
+@{
+    ViewData["Title"] = "New ticket";
+    ViewData["SubmitLabel"] = "Create ticket";
+}
+
+<section class="hd-page-head">
+    <div>
+        <span class="hd-eyebrow">Requests</span>
+        <h1 class="hd-display">Open a ticket</h1>
+        <p class="hd-lead">Describe the problem and we'll route it to the right person.</p>
+    </div>
+</section>
+
+<div class="row g-4 align-items-start">
+    <div class="col-lg-8">
+        <partial name="_TicketForm" model="Model" />
+    </div>
+
+    <div class="col-lg-4">
+        <aside class="hd-card">
+            <p class="hd-card-kicker">Before you send</p>
+            <ul class="small text-muted ps-3 mb-0" style="line-height: 1.8;">
+                <li>One issue per ticket — it keeps the thread easier to follow.</li>
+                <li>Include the exact error text or a screenshot description if you can.</li>
+                <li>Priority should reflect impact, not urgency of mood.</li>
+                <li>You can comment and reopen the ticket after it is resolved.</li>
+            </ul>
+        </aside>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

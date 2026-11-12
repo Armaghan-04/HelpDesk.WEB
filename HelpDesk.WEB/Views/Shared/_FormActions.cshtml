@@ -1,0 +1,11 @@
+@{
+    var submitLabel = ViewData["SubmitLabel"] as string ?? "Save";
+    var submitDisabled = ViewData["SubmitDisabled"] as bool? ?? false;
+}
+
+<div class="d-flex flex-wrap justify-content-end gap-2 mt-4 pt-3 border-top" style="border-color: var(--hd-line-soft) !important;">
+    <a class="btn btn-hd-ghost" asp-action="Index">Cancel</a>
+    <button type="submit" class="btn btn-hd-primary" disabled="@(submitDisabled ? "disabled" : null)">
+        @submitLabel
+    </button>
+</div>

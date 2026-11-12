@@ -1,0 +1,167 @@
+@model TicketIndexViewModel
+@{
+    ViewData["Title"] = "Tickets";
+
+    var statuses = Enum.GetValues<TicketStatus>();
+    var priorities = Enum.GetValues<TicketPriority>();
+    var canCreate = User.IsInRole(Roles.Employee);
+
+    var pagination = new PaginationViewModel
+    {
+        Pagination = Model.Pagination,
+        Action = "Index",
+        RouteValues = PaginationViewModel.BuildRouteValues(
+            ("search", Model.Search),
+            ("status", Model.Status?.ToString()),
+            ("priority", Model.Priority?.ToString()),
+            ("departmentId", Model.DepartmentId?.ToString())),
+        AriaLabel = "Ticket pagination",
+        ItemNounSingular = "ticket",
+        ItemNounPlural = "tickets"
+    };
+}
+
+<section class="hd-page-head">
+    <div>
+        <span class="hd-eyebrow">@Model.ScopeLabel</span>
+        <h1 class="hd-display">Tickets</h1>
+        <p class="hd-lead">
+            @Model.Pagination.TotalCount @(Model.Pagination.TotalCount == 1 ? "ticket" : "tickets") matching your view.
+        </p>
+    </div>
+    @if (canCreate)
+    {
+        <a class="btn btn-hd-primary" asp-action="Create">
+            <svg class="hd-icon me-1"><use href="#i-plus" /></svg>
+            New ticket
+        </a>
+    }
+</section>
+
+<form hd-filter asp-action="Index">
+    <partial name="_FilterSearch" model="@(new FilterSearchViewModel
+    {
+        Label = "Search",
+        Placeholder = "Search by title...",
+        Value = Model.Search
+    })" />
+
+    <div class="col-6 col-lg-2">
+        <label class="form-label" asp-for="Status">Status</label>
+        <select class="form-select" asp-for="Status">
+            <option value="">Any status</option>
+            @foreach (var status in statuses)
+            {
+                <option value="@status" selected="@(Model.Status == status ? "selected" : null)">@DisplayFormat.StatusLabel(status)</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-6 col-lg-2">
+        <label class="form-label" asp-for="Priority">Priority</label>
+        <select class="form-select" asp-for="Priority">
+            <option value="">Any priority</option>
+            @foreach (var priority in priorities)
+            {
+                <option value="@priority" selected="@(Model.Priority == priority ? "selected" : null)">@priority</option>
+            }
+        </select>
+    </div>
+
+    @if (Model.CanFilterByDepartment)
+    {
+        <div class="col-12 col-lg-2">
+            <label class="form-label" asp-for="DepartmentId">Department</label>
+            <select class="form-select" asp-for="DepartmentId">
+                <option value="">All departments</option>
+                @foreach (var department in Model.Departments)
+                {
+                    <option value="@department.Id" selected="@(Model.DepartmentId == department.Id ? "selected" : null)">@department.Name</option>
+                }
+            </select>
+        </div>
+    }
+
+    <partial name="_FilterActions" />
+</form>
+
+@if (Model.Tickets.Count == 0)
+{
+    <partial name="_EmptyState" model="@(new EmptyStateViewModel
+    {
+        IconId = "i-ticket",
+        Title = "Nothing here yet",
+        Message = canCreate
+            ? "No tickets match this view. Adjust the filters or open a new request."
+            : "No tickets match this view. Adjust the filters.",
+        ActionText = canCreate ? "Open a ticket" : null,
+        ActionName = canCreate ? "Create" : null
+    })" />
+}
+else
+{
+    <div class="hd-card hd-card-flush d-none d-md-block">
+        <div class="table-responsive">
+            <table class="table hd-table align-middle">
+                <thead>
+                    <tr>
+                        <th scope="col">Ticket</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Priority</th>
+                        <th scope="col">Assignee</th>
+                        <th scope="col">Opened</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ticket in Model.Tickets)
+                    {
+                        <tr>
+                            <td>
+                                <span class="hd-ticket-id">#@DisplayFormat.ShortId(ticket.Id)</span>
+                                <div>
+                                    <a class="hd-ticket-title" asp-action="Details" asp-route-id="@ticket.Id">@ticket.Title</a>
+                                </div>
+                                <span class="hd-ticket-sub">@ticket.DepartmentName</span>
+                            </td>
+                            <td><partial name="_StatusBadge" model="ticket.Status" /></td>
+                            <td><partial name="_PriorityBadge" model="ticket.Priority" /></td>
+                            <td>
+                                @if (ticket.AssignedToName is null)
+                                {
+                                    <span class="hd-tag is-muted">Unassigned</span>
+                                }
+                                else
+                                {
+                                    <span class="small fw-semibold">@ticket.AssignedToName</span>
+                                }
+                            </td>
+                            <td class="text-muted small">@DisplayFormat.LocalDate(ticket.CreatedAtUtc)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="d-md-none vstack gap-3">
+        @foreach (var ticket in Model.Tickets)
+        {
+            <a class="hd-ticket-card" asp-action="Details" asp-route-id="@ticket.Id">
+                <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                    <span class="hd-ticket-id">#@DisplayFormat.ShortId(ticket.Id)</span>
+                    <partial name="_StatusBadge" model="ticket.Status" />
+                </div>
+                <h2 class="h6 mb-1">@ticket.Title</h2>
+                <p class="hd-ticket-sub mb-3">@ticket.DepartmentName</p>
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+                    <partial name="_PriorityBadge" model="ticket.Priority" />
+                    <span class="hd-ticket-sub">
+                        @(ticket.AssignedToName ?? "Unassigned") · @DisplayFormat.LocalDate(ticket.CreatedAtUtc, "dd MMM")
+                    </span>
+                </div>
+            </a>
+        }
+    </div>
+
+    <partial name="_Pagination" model="pagination" />
+}

@@ -1,0 +1,81 @@
+@page
+@model LoginModel
+@inject IOptions<AuthenticationSettings> AuthenticationOptions
+@{
+    ViewData["Title"] = "Sign in";
+    var registrationEnabled = AuthenticationOptions.Value.Registration.Enabled;
+    var passwordRecoveryEnabled = AuthenticationOptions.Value.PasswordRecovery.Enabled;
+}
+
+<div class="row g-4 align-items-stretch hd-auth">
+    <div class="col-lg-5 d-none d-lg-flex">
+        <aside class="hd-auth-aside">
+            <div>
+                <span class="hd-eyebrow" style="color: rgba(244,243,238,.7);">Welcome back</span>
+                <h1 class="hd-auth-title">Pick up where<br />you left off.</h1>
+                <p class="hd-auth-text">
+                    Sign in to follow your requests, reply to the team, and keep every
+                    update in one place.
+                </p>
+            </div>
+            <ul class="hd-auth-list">
+                <li>Your tickets, always in view</li>
+                <li>One thread per request</li>
+                <li>Clear status at every step</li>
+            </ul>
+        </aside>
+    </div>
+
+    <div class="col-lg-7">
+        <section class="hd-card hd-auth-card">
+            <span class="hd-eyebrow">Account</span>
+            <h2 class="hd-display" style="font-size: clamp(1.8rem, 3vw, 2.35rem);">Sign in</h2>
+            <p class="hd-lead mb-4">Use the email address and password you registered with.</p>
+
+            <form id="account" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger small mb-3" role="alert"></div>
+
+                <input type="hidden" name="ReturnUrl" value="@Model.ReturnUrl" />
+
+                <div class="mb-3">
+                    <label class="form-label" asp-for="Input.Email">Email</label>
+                    <input class="form-control" asp-for="Input.Email" type="email"
+                           autocomplete="username" placeholder="you@company.com" />
+                    <span class="field-validation-error" asp-validation-for="Input.Email"></span>
+                </div>
+
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-baseline gap-2">
+                        <label class="form-label" asp-for="Input.Password">Password</label>
+                        @if (passwordRecoveryEnabled)
+                        {
+                            <a class="small" asp-page="./ForgotPassword">Forgot password?</a>
+                        }
+                    </div>
+                    <input class="form-control" asp-for="Input.Password" type="password"
+                           autocomplete="current-password" placeholder="Your password" />
+                    <span class="field-validation-error" asp-validation-for="Input.Password"></span>
+                </div>
+
+                <div class="form-check mb-4">
+                    <input class="form-check-input" asp-for="Input.RememberMe" />
+                    <label class="form-check-label small" asp-for="Input.RememberMe"></label>
+                </div>
+
+                <button id="login-submit" type="submit" class="btn btn-hd-primary w-100">Sign in</button>
+            </form>
+
+            @if (registrationEnabled)
+            {
+                <p class="small text-muted mt-3 mb-0">
+                    New here?
+                    <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Create an account</a>
+                </p>
+            }
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

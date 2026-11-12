@@ -1,0 +1,10 @@
+@model string
+
+@if (!string.IsNullOrEmpty(Model))
+{
+    var isError = Model.StartsWith("Error", StringComparison.OrdinalIgnoreCase);
+    <div class="hd-alert @(isError ? "is-error" : "is-success")" role="alert">
+        <span class="hd-alert-label">@(isError ? "Error" : "Done")</span>
+        <span>@Model</span>
+    </div>
+}

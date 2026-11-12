@@ -1,0 +1,18 @@
+@model EmptyStateViewModel
+
+@{
+    var hasAction = !string.IsNullOrWhiteSpace(Model.ActionText)
+        && !string.IsNullOrWhiteSpace(Model.ActionName);
+}
+
+<div class="hd-card hd-empty">
+    <div class="hd-empty-icon">
+        <svg class="hd-icon"><use href="#@Model.IconId" /></svg>
+    </div>
+    <h2 class="hd-empty-title">@Model.Title</h2>
+    <p class="text-muted @(hasAction ? "mb-3" : "mb-0")">@Model.Message</p>
+    @if (hasAction)
+    {
+        <a class="btn btn-hd-primary" asp-action="@Model.ActionName" asp-controller="@Model.ActionController">@Model.ActionText</a>
+    }
+</div>

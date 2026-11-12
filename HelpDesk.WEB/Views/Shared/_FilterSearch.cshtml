@@ -1,0 +1,10 @@
+@model FilterSearchViewModel
+
+<div class="col-12 col-lg-4">
+    <label class="form-label" for="Search">@Model.Label</label>
+    <div class="input-group">
+        <span class="input-group-text"><svg class="hd-icon"><use href="#i-search" /></svg></span>
+        <input class="form-control" id="Search" name="Search" type="search"
+               value="@Model.Value" placeholder="@Model.Placeholder" autocomplete="off" />
+    </div>
+</div>

@@ -1,0 +1,33 @@
+@model TicketFormViewModel
+@{
+    ViewData["Title"] = "Edit ticket";
+    ViewData["SubmitLabel"] = "Save changes";
+}
+
+<section class="hd-page-head">
+    <div>
+        <span class="hd-eyebrow">Editing</span>
+        <h1 class="hd-display">Update ticket</h1>
+        <p class="hd-lead">Refine the details while the ticket is still open. Status changes happen from the ticket page.</p>
+    </div>
+</section>
+
+<div class="row g-4 align-items-start">
+    <div class="col-lg-8">
+        <partial name="_TicketForm" model="Model" />
+    </div>
+
+    <div class="col-lg-4">
+        <aside class="hd-card">
+            <p class="hd-card-kicker">A note on editing</p>
+            <p class="small text-muted mb-0" style="line-height: 1.7;">
+                Ticket details can be edited while the request is open, assigned, in progress, or reopened.
+                Once it is resolved or closed, reopen it first.
+            </p>
+        </aside>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

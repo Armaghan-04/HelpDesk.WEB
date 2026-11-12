@@ -1,0 +1,95 @@
+@model DepartmentIndexViewModel
+@{
+    ViewData["Title"] = "Departments";
+}
+
+<section class="hd-page-head">
+    <div>
+        <span class="hd-eyebrow">Administration</span>
+        <h1 class="hd-display">Departments</h1>
+        <p class="hd-lead">
+            Departments route tickets to the right team. Deactivating one keeps its history
+            and every existing ticket relationship intact.
+        </p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-hd-ghost" asp-controller="Users" asp-action="Index">Team</a>
+        <a class="btn btn-hd-primary" asp-action="Create">
+            <svg class="hd-icon me-1"><use href="#i-plus" /></svg>
+            New department
+        </a>
+    </div>
+</section>
+
+@if (Model.Departments.Count == 0)
+{
+    <partial name="_EmptyState" model="@(new EmptyStateViewModel
+    {
+        IconId = "i-ticket",
+        Title = "No departments yet",
+        Message = "Create the first department so tickets can be routed.",
+        ActionText = "Create a department",
+        ActionName = "Create"
+    })" />
+}
+else
+{
+    <div class="hd-card hd-card-flush">
+        <div class="table-responsive">
+            <table class="table hd-table align-middle">
+                <thead>
+                    <tr>
+                        <th scope="col">Department</th>
+                        <th scope="col">Status</th>
+                        <th scope="col" class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var department in Model.Departments)
+                    {
+                        var isLastActive = department.IsActive && Model.ActiveCount <= 1;
+                        <tr>
+                            <td>
+                                <div class="fw-semibold">@department.Name</div>
+                                <div class="hd-ticket-sub">
+                                    @(string.IsNullOrWhiteSpace(department.Description)
+                                        ? "No description."
+                                        : department.Description)
+                                </div>
+                            </td>
+                            <td><partial name="_ActiveBadge" model="@department.IsActive" /></td>
+                            <td>
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a class="btn btn-hd-ghost btn-sm" asp-action="Edit" asp-route-id="@department.Id">Edit</a>
+
+                                    @if (department.IsActive)
+                                    {
+                                        <form asp-action="Deactivate" asp-route-id="@department.Id" method="post"
+                                              data-confirm="Deactivate '@department.Name'? Existing tickets keep their department.">
+                                            <button type="submit" class="btn btn-hd-danger btn-sm"
+                                                    disabled="@(isLastActive ? "disabled" : null)"
+                                                    title="@(isLastActive ? "At least one active department must remain." : null)">
+                                                Deactivate
+                                            </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <form asp-action="Activate" asp-route-id="@department.Id" method="post">
+                                            <button type="submit" class="btn btn-hd-primary btn-sm">Activate</button>
+                                        </form>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <p class="hd-muted small mt-3 mb-0">
+        Inactive departments cannot be chosen on new tickets. Existing tickets keep their
+        department, and deactivating never deletes anything.
+    </p>
+}

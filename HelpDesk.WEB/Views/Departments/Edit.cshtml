@@ -1,0 +1,37 @@
+@model DepartmentFormViewModel
+@{
+    ViewData["Title"] = "Edit department";
+    ViewData["SubmitLabel"] = "Save changes";
+}
+
+<section class="hd-page-head">
+    <div>
+        <span class="hd-eyebrow">Administration</span>
+        <h1 class="hd-display">Edit department</h1>
+        <p class="hd-lead">Update how this department appears on ticket forms and filters.</p>
+    </div>
+    <a class="btn btn-hd-ghost" asp-action="Index">Back to departments</a>
+</section>
+
+<div class="row g-4 align-items-start">
+    <div class="col-lg-8">
+        <partial name="_DepartmentForm" model="Model" />
+    </div>
+
+    <div class="col-lg-4">
+        <aside class="hd-card">
+            <p class="hd-card-kicker">Current state</p>
+            <p class="mb-3">
+                <partial name="_ActiveBadge" model="@Model.IsActive" />
+            </p>
+            <p class="small text-muted mb-0" style="line-height: 1.7;">
+                Use Activate or Deactivate on the departments list. Deactivation never deletes
+                the department, and existing tickets keep their relationship.
+            </p>
+        </aside>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

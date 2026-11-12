@@ -1,0 +1,82 @@
+@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Create account";
+}
+
+<div class="row g-4 align-items-stretch hd-auth">
+    <div class="col-lg-5 d-none d-lg-flex">
+        <aside class="hd-auth-aside">
+            <div>
+                <span class="hd-eyebrow" style="color: rgba(244,243,238,.7);">Join the desk</span>
+                <h1 class="hd-auth-title">Less chasing.<br />More fixing.</h1>
+                <p class="hd-auth-text">
+                    Create an account to raise requests, follow progress, and keep every
+                    answer in a single, tidy thread.
+                </p>
+            </div>
+            <ul class="hd-auth-list">
+                <li>Structured requests, not lost emails</li>
+                <li>Live status on every ticket</li>
+                <li>One shared conversation history</li>
+            </ul>
+        </aside>
+    </div>
+
+    <div class="col-lg-7">
+        <section class="hd-card hd-auth-card">
+            <span class="hd-eyebrow">Account</span>
+            <h2 class="hd-display" style="font-size: clamp(1.8rem, 3vw, 2.35rem);">Create your account</h2>
+            <p class="hd-lead mb-4">It takes less than a minute. You can add more details later.</p>
+
+            <form id="registerForm" method="post" novalidate>
+                <div asp-validation-summary="ModelOnly" class="text-danger small mb-3" role="alert"></div>
+
+                <div class="mb-3">
+                    <label class="form-label" asp-for="Input.FullName">Full name</label>
+                    <input class="form-control" asp-for="Input.FullName" autocomplete="name"
+                           maxlength="@DomainConstraints.User.FullNameMaxLength" placeholder="e.g. Alex Morgan" />
+                    <span class="field-validation-error" asp-validation-for="Input.FullName"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" asp-for="Input.Email">Email</label>
+                    <input class="form-control" asp-for="Input.Email" type="email" autocomplete="username"
+                           maxlength="256" placeholder="you@company.com" />
+                    <span class="field-validation-error" asp-validation-for="Input.Email"></span>
+                </div>
+
+                <p class="form-text mb-3">
+                    New accounts start with <strong>Employee</strong> access. A manager can promote you
+                    to Technician or Manager from the Team page.
+                </p>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label" asp-for="Input.Password">Password</label>
+                        <input class="form-control" asp-for="Input.Password" type="password"
+                               autocomplete="new-password" placeholder="At least 6 characters" />
+                        <span class="field-validation-error" asp-validation-for="Input.Password"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" asp-for="Input.ConfirmPassword">Confirm password</label>
+                        <input class="form-control" asp-for="Input.ConfirmPassword" type="password"
+                               autocomplete="new-password" placeholder="Repeat your password" />
+                        <span class="field-validation-error" asp-validation-for="Input.ConfirmPassword"></span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-hd-primary w-100 mt-4">Create account</button>
+            </form>
+
+            <p class="small text-muted mt-3 mb-0">
+                Already have an account?
+                <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">Sign in</a>
+            </p>
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
