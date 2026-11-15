@@ -887,9 +887,38 @@ a {
 
 /* ---------- Home ---------- */
 
+.hd-home {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+    align-items: center;
+    gap: clamp(2rem, 4vw, 4rem);
+    padding-bottom: 3rem;
+}
+
 .hd-hero {
     position: relative;
     padding: clamp(2.75rem, 6vw, 5rem) 0 2.5rem;
+}
+
+.hd-feature-stack {
+    display: grid;
+    gap: 1rem;
+}
+
+/* Keep the stack clear of the navbar when it is taller than the hero copy. */
+@media (min-width: 992px) {
+    .hd-feature-stack {
+        padding-top: clamp(1.25rem, 2.5vw, 2rem);
+    }
+}
+
+.hd-feature-stack .hd-feature {
+    padding: 1.35rem 1.5rem;
+}
+
+.hd-feature-stack .hd-feature-index {
+    margin-bottom: .55rem;
+    font-size: 1.65rem;
 }
 
 .hd-hero-title {
@@ -1288,6 +1317,16 @@ a {
 /* ---------- Responsive / motion ---------- */
 
 @media (max-width: 991.98px) {
+    .hd-home {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0;
+        padding-bottom: 2.5rem;
+    }
+
+    .hd-hero {
+        padding-bottom: 2rem;
+    }
+
     .hd-navbar .navbar-collapse {
         padding-top: 1rem;
     }

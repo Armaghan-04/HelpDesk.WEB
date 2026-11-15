@@ -27,10 +27,11 @@ namespace HelpDesk.WEB.Data
                 }
                 else
                 {
-                    logger.LogError(
-                        "Failed to seed role {Role}: {Errors}",
-                        roleName,
-                        string.Join("; ", result.Errors.Select(error => error.Description)));
+                    var errors = string.Join("; ", result.Errors.Select(error => error.Description));
+                    logger.LogError("Failed to seed role {Role}: {Errors}", roleName, errors);
+
+                    throw new InvalidOperationException(
+                        $"Failed to seed the '{roleName}' role: {errors}");
                 }
             }
         }

@@ -135,7 +135,7 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
 
     await IdentitySeeder.SeedRolesAsync(services);
-    // Runs before the bootstrap check so an enabled demo Manager satisfies it.
+    // Runs before the bootstrap check so the demo Manager satisfies it.
     await DemoAccountSeeder.SeedAsync(services);
     await IdentitySeeder.SeedBootstrapManagerAsync(services);
     await DepartmentSeeder.SeedAsync(services);

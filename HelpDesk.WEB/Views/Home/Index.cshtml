@@ -3,42 +3,38 @@
     var canCreate = User.Identity?.IsAuthenticated != true || User.IsInRole(Roles.Employee);
 }
 
-<section class="hd-hero">
-    <span class="hd-eyebrow">Support, without the noise</span>
-    <h1 class="hd-hero-title">A calmer way to <span class="hd-hero-accent">get things fixed.</span></h1>
-    <p class="hd-hero-lead">
-        Raise a request, follow its progress, and keep every reply in one place.
-        No lost email threads, no mystery statuses.
-    </p>
-    <div class="d-flex flex-wrap gap-2">
-        @if (canCreate)
-        {
-            <a class="btn btn-hd-primary btn-lg" asp-controller="Tickets" asp-action="Create">Open a ticket</a>
-        }
-        <a class="btn btn-hd-ghost btn-lg" asp-controller="Tickets" asp-action="Index">View tickets</a>
+<section class="hd-home">
+    <div class="hd-hero">
+        <span class="hd-eyebrow">Support, without the noise</span>
+        <h1 class="hd-hero-title">A calmer way to <span class="hd-hero-accent">get things fixed.</span></h1>
+        <p class="hd-hero-lead">
+            Raise a request, follow its progress, and keep every reply in one place.
+            No lost email threads, no mystery statuses.
+        </p>
+        <div class="d-flex flex-wrap gap-2">
+            @if (canCreate)
+            {
+                <a class="btn btn-hd-primary btn-lg" asp-controller="Tickets" asp-action="Create">Open a ticket</a>
+            }
+            <a class="btn btn-hd-ghost btn-lg" asp-controller="Tickets" asp-action="Index">View tickets</a>
+        </div>
     </div>
-</section>
 
-<section class="row g-4 pb-5">
-    <div class="col-md-4">
+    <aside class="hd-feature-stack" aria-label="How HelpDesk works">
         <article class="hd-feature">
             <span class="hd-feature-index">01</span>
             <h2>Capture the details</h2>
             <p>One structured place for the problem, the priority, and the department that owns it.</p>
         </article>
-    </div>
-    <div class="col-md-4">
         <article class="hd-feature">
             <span class="hd-feature-index">02</span>
             <h2>Route it once</h2>
             <p>Assign the right technician, keep internal notes separate, and let the requester follow along.</p>
         </article>
-    </div>
-    <div class="col-md-4">
         <article class="hd-feature">
             <span class="hd-feature-index">03</span>
             <h2>Resolve with a trail</h2>
             <p>Every status change is recorded, so handovers stay clear and nothing quietly disappears.</p>
         </article>
-    </div>
+    </aside>
 </section>

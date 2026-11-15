@@ -1,20 +1,56 @@
-# HelpDesk.WEB
+<div align="center">
 
-A server-rendered help-desk application built with ASP.NET Core MVC. Employees raise tickets, technicians work them, and managers run assignments, departments, and user roles from one place.
+<h1 align="center">HelpDesk.WEB</h1>
 
-## Tech stack
+<p align="center">
+  <strong>A server-rendered help desk for employees, technicians, and managers — built with ASP.NET Core MVC.</strong>
+</p>
 
-- **Framework:** ASP.NET Core MVC (`net10.0`), Razor views + Razor Pages for Identity
-- **Database:** SQL Server via EF Core 10 (migrations committed)
-- **Authentication:** ASP.NET Core Identity with `Guid` keys and role-based authorization
-- **Validation:** DataAnnotations + FluentValidation (auto-wired through SharpGrip)
-- **Mapping:** Riok.Mapperly (source-generated)
-- **UI:** Bootstrap 5.3 served locally, hand-written `wwwroot/css/site.css`, vanilla JS
-- **Patterns:** lightweight in-repo `Result` / `Result<T>` for expected business failures
+<p align="center">
+  <a href="https://helpdeskmvc.runasp.net"><strong>🌐 View Live Demo</strong></a>
+  &nbsp;·&nbsp;
+  <a href="https://github.com/Armaghan-04/HelpDesk.WEB/issues">Report a Bug</a>
+  &nbsp;·&nbsp;
+  <a href="https://github.com/Armaghan-04/HelpDesk.WEB/issues">Request a Feature</a>
+</p>
+
+<p align="center">
+  <a href="https://dotnet.microsoft.com/"><img src="https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet&logoColor=white" alt=".NET 10"></a>
+  <a href="https://learn.microsoft.com/aspnet/core/mvc/overview"><img src="https://img.shields.io/badge/ASP.NET%20Core-MVC-512BD4?logo=dotnet&logoColor=white" alt="ASP.NET Core MVC"></a>
+  <a href="https://learn.microsoft.com/ef/core/"><img src="https://img.shields.io/badge/EF%20Core-10-512BD4?logo=dotnet&logoColor=white" alt="EF Core 10"></a>
+  <a href="https://www.microsoft.com/sql-server"><img src="https://img.shields.io/badge/SQL%20Server-Database-CC2927?logo=microsoftsqlserver&logoColor=white" alt="SQL Server"></a>
+  <a href="https://getbootstrap.com/"><img src="https://img.shields.io/badge/Bootstrap-5.3-7952B3?logo=bootstrap&logoColor=white" alt="Bootstrap 5.3"></a>
+</p>
+
+</div>
+
+---
+
+## Overview
+
+HelpDesk.WEB is a full-stack help-desk application built with **ASP.NET Core MVC** and **SQL Server**. Employees raise tickets, technicians work them through a defined workflow, and managers handle assignments, departments, and user roles from one place.
+
+The project is designed as a realistic portfolio application: server-rendered Razor views, ASP.NET Core Identity with role-based authorization, EF Core migrations, FluentValidation, and a lightweight `Result` pattern for expected business failures.
+
+## Live demo
+
+**https://helpdeskmvc.runasp.net**
+
+The live demo is hosted on MonsterASP.NET and comes with three pre-seeded accounts — one for each role.
+
+### Demo accounts
+
+| Role | Email | Password |
+|---|---|---|
+| Employee | `demoemployee@helpdesk.com` | `Pass@123` |
+| Technician | `demotechnician@helpdesk.com` | `Pass@123` |
+| Manager | `demomanager@helpdesk.com` | `Pass@123` |
+
+Demo credentials are defined in [`Data/DemoAccountSeeder.cs`](HelpDesk.WEB/Data/DemoAccountSeeder.cs). The seeder is idempotent: it creates only missing accounts and never resets an existing account's password, profile, or roles. Because it runs before the bootstrap-manager check, the demo Manager counts as the first manager.
 
 ## Features
 
-### Roles
+### Role-based access
 
 | Role | Responsibilities |
 |---|---|
@@ -48,7 +84,7 @@ Managers get a paginated Team page with search, role/status filters, and sorting
 
 Security stamps are validated every minute, so role changes and deactivations take effect quickly.
 
-### Identity notes
+### Identity and security
 
 - Email confirmation is not required.
 - Phone numbers and 2FA are intentionally removed; built-in 2FA pages return 404.
@@ -57,7 +93,17 @@ Security stamps are validated every minute, so role changes and deactivations ta
 - Sign-in POSTs are limited to 10 attempts per minute per client IP; excess requests receive `429 Too Many Requests`. Loading the login page does not count toward the limit. Counters are in-memory per app instance and reset on restart.
 - Password recovery is controlled by `Authentication:PasswordRecovery:Enabled` and is disabled by default. The "Forgot password?" link is hidden while it is disabled, and direct GET/POST requests to the Forgot Password, Reset Password, and confirmation pages return 404.
 - Password reset emails are not sent because no email provider is configured.
-- Demo accounts are controlled by `DemoAccounts:Enabled` and are only created when that role's email and password are also configured. They are created through Identity with the normal password policy and role assignment; public registration stays disabled.
+- Three demo accounts (Employee, Technician, Manager) are seeded automatically on startup. They are created through Identity with the normal password policy and role assignment; public registration stays disabled.
+
+## Tech stack
+
+- **Framework:** ASP.NET Core MVC (`net10.0`), Razor views + Razor Pages for Identity
+- **Database:** SQL Server via EF Core 10 (migrations committed)
+- **Authentication:** ASP.NET Core Identity with `Guid` keys and role-based authorization
+- **Validation:** DataAnnotations + FluentValidation (auto-wired through SharpGrip)
+- **Mapping:** Riok.Mapperly (source-generated)
+- **UI:** Bootstrap 5.3 served locally, hand-written `wwwroot/css/site.css`, vanilla JS
+- **Patterns:** lightweight in-repo `Result` / `Result<T>` for expected business failures
 
 ## Getting started
 
@@ -71,11 +117,34 @@ Security stamps are validated every minute, so role changes and deactivations ta
 dotnet tool install --global dotnet-ef
 ```
 
-### User Secrets
+### Clone the repository
 
-Local secrets are stored in the .NET User Secrets store and are never committed to
-the repository. The project is already initialized (`UserSecretsId` is set in
-`HelpDesk.WEB/HelpDesk.WEB.csproj`), so you can set values directly:
+```bash
+git clone https://github.com/Armaghan-04/HelpDesk.WEB.git
+cd HelpDesk.WEB
+```
+
+### Configure the database
+
+Set `ConnectionStrings:DefaultConnection` to a SQL Server connection string. For LocalDB, use:
+
+```json
+"ConnectionStrings": {
+  "DefaultConnection": "Server=(localdb)\\MSSQLLocalDB;Database=HelpDeskDb;Trusted_Connection=True;TrustServerCertificate=True"
+}
+```
+
+You can place it in `appsettings.json` for local development, or keep it out of source control and supply it through User Secrets (recommended for anything beyond a throwaway LocalDB instance):
+
+```bash
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "<YOUR_CONNECTION_STRING>" --project HelpDesk.WEB
+```
+
+In production, set the `ConnectionStrings__DefaultConnection` environment variable to override the committed value.
+
+### User secrets
+
+Local secrets are stored in the .NET User Secrets store and are never committed to the repository. The project is already initialized (`UserSecretsId` is set in `HelpDesk.WEB/HelpDesk.WEB.csproj`), so you can set values directly:
 
 ```bash
 dotnet user-secrets list --project HelpDesk.WEB
@@ -83,51 +152,23 @@ dotnet user-secrets set "<Key>" "<Value>" --project HelpDesk.WEB
 dotnet user-secrets remove "<Key>" --project HelpDesk.WEB
 ```
 
-User Secrets are loaded automatically when `ASPNETCORE_ENVIRONMENT=Development`.
-The included launch profiles (`Properties/launchSettings.json`) set this for
-`dotnet run` and the EF Core tools.
+User Secrets are loaded automatically when `ASPNETCORE_ENVIRONMENT=Development`. The included launch profiles (`Properties/launchSettings.json`) set this for `dotnet run` and the EF Core tools.
 
-### Configure the database
+### Optional: bootstrap manager
 
-No connection string is committed to the repository. `appsettings.json` intentionally
-leaves `ConnectionStrings:DefaultConnection` unset; local development supplies it
-through User Secrets. For LocalDB, run:
-
-```bash
-dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=(localdb)\\MSSQLLocalDB;Database=HelpDeskDb;Trusted_Connection=True;TrustServerCertificate=True" --project HelpDesk.WEB
-```
-
-Use your own SQL Server connection string instead if you are not using LocalDB.
-In production, set the same key through the
-`ConnectionStrings__DefaultConnection` environment variable.
-
-### Configure the bootstrap manager
-
-On a fresh database, the app creates its first manager from the `BootstrapManager` section. No credentials are committed to the repository; set them through user secrets locally:
+On a fresh database, the demo Manager is seeded first, so a separate bootstrap manager is only needed if you remove `DemoAccountSeeder.SeedAsync(services)` from `Program.cs`. If you use it, set these through user secrets locally:
 
 ```bash
 dotnet user-secrets set "BootstrapManager:FullName" "Help Desk Manager" --project HelpDesk.WEB
 dotnet user-secrets set "BootstrapManager:Email" "manager@example.com" --project HelpDesk.WEB
-dotnet user-secrets set "BootstrapManager:Password" "<YOUR_STRONG_PASSWORD>"
+dotnet user-secrets set "BootstrapManager:Password" "<YOUR_STRONG_PASSWORD>" --project HelpDesk.WEB
 ```
 
 If no manager exists and no credentials are configured, the seeder logs a warning and skips account creation.
 
-### Configure demo accounts
-
-For a portfolio deployment you can seed three predefined accounts: an Employee, a Technician, and a Manager. The feature is controlled by `DemoAccounts:Enabled`; an account is only created when that role's email and password are also configured. Enable it only for the initial setup.
-
-Create the accounts on the first production start, then turn the feature off again:
-
-1. Set `DemoAccounts__Enabled=true` and provide credentials for each account you want (see the environment variables below).
-2. Start the app once. Missing accounts are created with their role; existing accounts are left completely unchanged.
-3. Remove `DemoAccounts__Enabled` or set it to `false`, and remove the password variables from the host configuration. The accounts remain in the database and continue to work.
-
-The seeder is idempotent. On later starts it never resets a password, overwrites a profile, or changes an account's roles. If an existing account is inactive or missing its expected role, the app logs a warning and leaves it alone. Invalid or weak passwords are rejected by the existing Identity password policy and logged; the incomplete account is removed so it can be retried.
-
-Because the demo accounts run before the bootstrap-manager check, an enabled demo Manager counts as the first manager and prevents an extra bootstrap account from being created.
-
 ### Apply migrations and run
+
+Migrations are applied manually, not at startup. Update the database first, then run the app:
 
 ```bash
 dotnet restore
@@ -140,7 +181,7 @@ The development profile listens on:
 - `https://localhost:7190`
 - `http://localhost:5141`
 
-Startup is idempotent: it ensures the three roles, any enabled demo accounts, the bootstrap manager, and the default departments exist.
+Startup is idempotent: it ensures the three roles, the demo accounts, the bootstrap manager, and the default departments exist. Run `dotnet ef database update` again after pulling new migrations.
 
 ### Build
 
@@ -160,11 +201,6 @@ The solution (`HelpDesk.WEB.slnx`) contains the web project only.
 | `BootstrapManager:FullName` | Display name for the first manager |
 | `BootstrapManager:Email` | Email/login for the first manager |
 | `BootstrapManager:Password` | Password for the first manager |
-| `DemoAccounts:Enabled` | Creates the demo accounts when `true`; leave `false` after initial setup |
-| `DemoAccounts:Employee:Email` / `Password` | Demo Employee credentials |
-| `DemoAccounts:Technician:Email` / `Password` | Demo Technician credentials |
-| `DemoAccounts:Manager:Email` / `Password` | Demo Manager credentials |
-| `DemoAccounts:{Employee\|Technician\|Manager}:FullName` | Optional display name; defaults to "Demo Employee", etc. |
 | `Logging:LogLevel:*` | Standard ASP.NET Core logging levels |
 
 Use environment variables in production, for example:
@@ -177,29 +213,15 @@ Authentication__PasswordRecovery__Enabled=false
 BootstrapManager__FullName=...
 BootstrapManager__Email=...
 BootstrapManager__Password=...
-DemoAccounts__Enabled=false
-DemoAccounts__Employee__Email=...
-DemoAccounts__Employee__Password=...
-DemoAccounts__Employee__FullName=...
-DemoAccounts__Technician__Email=...
-DemoAccounts__Technician__Password=...
-DemoAccounts__Technician__FullName=...
-DemoAccounts__Manager__Email=...
-DemoAccounts__Manager__Password=...
-DemoAccounts__Manager__FullName=...
 ```
 
-Environment variable names use `__` (double underscore) in place of the `:` used in
-configuration keys. For example, `ConnectionStrings:DefaultConnection` becomes
-`ConnectionStrings__DefaultConnection`.
+Environment variable names use `__` (double underscore) in place of the `:` used in configuration keys. For example, `ConnectionStrings:DefaultConnection` becomes `ConnectionStrings__DefaultConnection`.
 
-On MonsterASP.NET, add these values in the hosting panel's environment variables /
-application settings instead of editing `appsettings.json`. Never commit a real
-connection string or password.
+On MonsterASP.NET, add these values in the hosting panel's environment variables / application settings instead of editing `appsettings.json`. Never commit a real connection string or password.
 
 ### Registration and password recovery
 
-Registration is enabled only by `appsettings.Development.json`. The base `appsettings.json` disables it, so Production and other environments reject both the registration page and direct POSTs unless explicitly enabled.
+Registration is enabled only by `appsettings.Development.json`. `appsettings.json` disables it, so Production rejects the registration page and direct POSTs unless it is explicitly enabled in host configuration.
 
 Password recovery is disabled by default because the app has no email sender. When disabled, the Forgot Password link is hidden and direct GET/POST requests to `ForgotPassword`, `ForgotPasswordConfirmation`, `ResetPassword`, and `ResetPasswordConfirmation` return 404. Setting `Authentication:PasswordRecovery:Enabled` re-enables those pages, but it does not make email delivery work. Before enabling it, register a real `IEmailSender` implementation and test the full reset flow.
 
@@ -207,33 +229,35 @@ Password recovery is disabled by default because the app has no email sender. Wh
 
 ```text
 HelpDesk.WEB/
-├── Areas/
-├── Common/
-├── Configuration/
-├── Controllers/
-├── Data/
-├── Extensions/
-├── Mappings/
-├── Models/
-├── Services/
-├── TagHelpers/
-├── Validation/
-├── Validators/
-├── Views/
-├── wwwroot/
+├── Areas/              # Razor Pages for Identity and account management
+├── Common/             # Result / Result<T> types
+├── Configuration/      # Options classes
+├── Controllers/        # MVC controllers
+├── Data/               # DbContext and seeders
+├── Extensions/         # Service and helper extensions
+├── Mappings/           # Mapperly mapping definitions
+├── Migrations/         # EF Core migrations
+├── Models/             # Entities and view models
+├── Services/           # Business logic and interfaces
+├── TagHelpers/         # Custom tag helpers
+├── Validation/         # Validation infrastructure
+├── Validators/         # FluentValidation validators
+├── Views/              # Razor views
+├── wwwroot/            # Static assets (Bootstrap, CSS, JS)
 ├── Program.cs
-└── appsettings.json
+├── appsettings.json
+└── appsettings.Development.json
 ```
 
-## Deployment notes
+## Deployment
 
 Before deploying to production:
 
 1. Set `ASPNETCORE_ENVIRONMENT=Production`.
 2. Set `ConnectionStrings__DefaultConnection` to a real SQL Server connection string.
-3. Apply migrations before the app starts.
-4. Provide `BootstrapManager__FullName`, `BootstrapManager__Email`, and `BootstrapManager__Password` for the first deploy through environment variables. User Secrets are for local development only and are not read in Production.
-5. Optionally enable `DemoAccounts` for the first start to create the demo Employee, Technician, and Manager accounts, then disable it and remove the password variables.
+3. Apply migrations manually before starting the app with `dotnet ef database update --project HelpDesk.WEB --startup-project HelpDesk.WEB`. The SQL login must be allowed to create and alter schema.
+4. Provide `BootstrapManager__FullName`, `BootstrapManager__Email`, and `BootstrapManager__Password` for the first deploy through environment variables if you are not relying on the demo accounts. User Secrets are for local development only and are not read in Production.
+5. No demo-account configuration is needed: startup creates the three public accounts with the credentials in [Demo accounts](#demo-accounts). If you do not want them in production, remove the `DemoAccountSeeder.SeedAsync(services)` call from `Program.cs`.
 6. Keep `Authentication__Registration__Enabled=false` unless public sign-up is intended.
 7. Keep `Authentication__PasswordRecovery__Enabled=false` until a real email sender is configured and tested.
 8. Serve over HTTPS.
@@ -258,3 +282,17 @@ The output is framework-dependent by default, so the host needs the ASP.NET Core
 - Technicians can open any ticket by URL, not only tickets assigned to them.
 - History tracks status changes only, not reassignment or comment activity.
 - No dark mode, dashboard, or role-aware home page.
+
+## Contributing
+
+Contributions, issues, and feature requests are welcome. For substantial changes, open an issue first so the approach can be discussed before you invest time in a pull request. Please keep the existing code style and update the README when behavior changes.
+
+## License
+
+No license file is currently included in this repository. Add a `LICENSE` file if you intend others to reuse or redistribute the project.
+
+---
+
+<p align="center">
+  Built and maintained by <a href="https://github.com/Armaghan-04">@Armaghan-04</a>
+</p>
