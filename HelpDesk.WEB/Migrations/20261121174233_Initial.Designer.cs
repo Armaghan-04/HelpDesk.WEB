@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HelpDesk.WEB.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20261115111947_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20261121174233_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
