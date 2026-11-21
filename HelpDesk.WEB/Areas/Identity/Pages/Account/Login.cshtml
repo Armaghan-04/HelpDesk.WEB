@@ -3,77 +3,105 @@
 @inject IOptions<AuthenticationSettings> AuthenticationOptions
 @{
     ViewData["Title"] = "Sign in";
+    ViewData["BodyClass"] = "hd-login-page";
     var registrationEnabled = AuthenticationOptions.Value.Registration.Enabled;
     var passwordRecoveryEnabled = AuthenticationOptions.Value.PasswordRecovery.Enabled;
 }
 
-<div class="row g-4 align-items-stretch hd-auth">
-    <div class="col-lg-5 d-none d-lg-flex">
-        <aside class="hd-auth-aside">
-            <div>
-                <span class="hd-eyebrow" style="color: rgba(244,243,238,.7);">Welcome back</span>
-                <h1 class="hd-auth-title">Pick up where<br />you left off.</h1>
-                <p class="hd-auth-text">
-                    Sign in to follow your requests, reply to the team, and keep every
-                    update in one place.
-                </p>
+<div class="hd-login">
+    <aside class="hd-login-showcase" aria-labelledby="hd-demo-title">
+        <div class="hd-login-showcase-inner">
+            <div class="hd-demo hd-demo-dark">
+                <header class="hd-demo-intro">
+                    <span class="hd-login-kicker hd-login-kicker-light">Demo accounts</span>
+                    <h1 id="hd-demo-title">Try every side of the desk.</h1>
+                    <p>Pick a role to fill the sign-in form instantly — no setup, no waiting.</p>
+                </header>
+                <partial name="_DemoAccounts" model="Model.DemoAccounts" />
             </div>
-            <ul class="hd-auth-list">
-                <li>Your tickets, always in view</li>
-                <li>One thread per request</li>
-                <li>Clear status at every step</li>
-            </ul>
-        </aside>
-    </div>
+        </div>
+    </aside>
 
-    <div class="col-lg-7">
-        <section class="hd-card hd-auth-card">
-            <span class="hd-eyebrow">Account</span>
-            <h2 class="hd-display" style="font-size: clamp(1.8rem, 3vw, 2.35rem);">Sign in</h2>
-            <p class="hd-lead mb-4">Use the email address and password you registered with.</p>
+    <section class="hd-login-form-panel" aria-labelledby="hd-login-title">
+        <div class="hd-login-form-card">
+            <div class="hd-login-form-head">
+                <span class="hd-login-kicker">Account access</span>
+                <h2 id="hd-login-title">Welcome back</h2>
+                <p>Sign in to pick up where your team left off.</p>
+            </div>
 
             <form id="account" method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger small mb-3" role="alert"></div>
-
+                <div asp-validation-summary="ModelOnly" class="hd-form-alert" role="alert"></div>
                 <input type="hidden" name="ReturnUrl" value="@Model.ReturnUrl" />
 
-                <div class="mb-3">
-                    <label class="form-label" asp-for="Input.Email">Email</label>
+                <div class="hd-login-field">
+                    <label class="form-label" asp-for="Input.Email">Email address</label>
                     <input class="form-control" asp-for="Input.Email" type="email"
-                           autocomplete="username" placeholder="you@company.com" />
+                           autocomplete="username" autofocus placeholder="you@company.com" />
                     <span class="field-validation-error" asp-validation-for="Input.Email"></span>
                 </div>
 
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between align-items-baseline gap-2">
+                <div class="hd-login-field">
+                    <div class="hd-login-label-row">
                         <label class="form-label" asp-for="Input.Password">Password</label>
                         @if (passwordRecoveryEnabled)
                         {
-                            <a class="small" asp-page="./ForgotPassword">Forgot password?</a>
+                            <a class="hd-login-forgot" asp-page="./ForgotPassword">Forgot password?</a>
                         }
                     </div>
-                    <input class="form-control" asp-for="Input.Password" type="password"
-                           autocomplete="current-password" placeholder="Your password" />
+                    <div class="hd-password-field">
+                        <input class="form-control" asp-for="Input.Password" type="password"
+                               autocomplete="current-password" placeholder="Your password" />
+                        <button type="button" class="hd-password-toggle" data-password-toggle="Input_Password"
+                                aria-label="Show password" aria-pressed="false" title="Show password">
+                            <svg class="hd-eye hd-eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12Z" />
+                                <circle cx="12" cy="12" r="2.75" />
+                            </svg>
+                            <svg class="hd-eye hd-eye-hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12Z" />
+                                <circle cx="12" cy="12" r="2.75" />
+                                <path d="M3 3l18 18" />
+                            </svg>
+                        </button>
+                    </div>
                     <span class="field-validation-error" asp-validation-for="Input.Password"></span>
                 </div>
 
-                <div class="form-check mb-4">
+                <div class="form-check hd-login-remember">
                     <input class="form-check-input" asp-for="Input.RememberMe" />
-                    <label class="form-check-label small" asp-for="Input.RememberMe"></label>
+                    <label class="form-check-label" asp-for="Input.RememberMe"></label>
                 </div>
 
-                <button id="login-submit" type="submit" class="btn btn-hd-primary w-100">Sign in</button>
-            </form>
+                <button id="login-submit" type="submit" class="btn btn-hd-primary w-100 hd-login-submit">
+                    Sign in
+                    <svg class="hd-icon" aria-hidden="true" focusable="false"><use href="#i-arrow"></use></svg>
+                </button>
 
-            @if (registrationEnabled)
-            {
-                <p class="small text-muted mt-3 mb-0">
-                    New here?
-                    <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Create an account</a>
-                </p>
-            }
-        </section>
-    </div>
+                <p id="demo-fill-status" class="visually-hidden" aria-live="polite"></p>
+
+                @if (registrationEnabled)
+                {
+                    <p class="hd-login-create">
+                        New to HelpDesk?
+                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Create an account</a>
+                    </p>
+                }
+            </form>
+        </div>
+
+        <details class="hd-login-demo-mobile d-lg-none">
+            <summary>
+                <span>Demo accounts</span>
+                <span class="hd-login-demo-count">@Model.DemoAccounts.Count roles</span>
+            </summary>
+            <div class="hd-demo hd-demo-light">
+                <partial name="_DemoAccounts" model="Model.DemoAccounts" />
+            </div>
+        </details>
+    </section>
 </div>
 
 @section Scripts {

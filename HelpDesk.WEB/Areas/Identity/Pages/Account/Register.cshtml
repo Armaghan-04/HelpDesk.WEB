@@ -54,14 +54,46 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label" asp-for="Input.Password">Password</label>
-                        <input class="form-control" asp-for="Input.Password" type="password"
-                               autocomplete="new-password" placeholder="At least 6 characters" />
+                        <div class="hd-password-field">
+                            <input class="form-control" asp-for="Input.Password" type="password"
+                                   autocomplete="new-password" placeholder="At least 6 characters" />
+                            <button type="button" class="hd-password-toggle" data-password-toggle="Input_Password"
+                                    aria-label="Show password" aria-pressed="false" title="Show password">
+                                <svg class="hd-eye hd-eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12Z" />
+                                    <circle cx="12" cy="12" r="2.75" />
+                                </svg>
+                                <svg class="hd-eye hd-eye-hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12Z" />
+                                    <circle cx="12" cy="12" r="2.75" />
+                                    <path d="M3 3l18 18" />
+                                </svg>
+                            </button>
+                        </div>
                         <span class="field-validation-error" asp-validation-for="Input.Password"></span>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label" asp-for="Input.ConfirmPassword">Confirm password</label>
-                        <input class="form-control" asp-for="Input.ConfirmPassword" type="password"
-                               autocomplete="new-password" placeholder="Repeat your password" />
+                        <div class="hd-password-field">
+                            <input class="form-control" asp-for="Input.ConfirmPassword" type="password"
+                                   autocomplete="new-password" placeholder="Repeat your password" />
+                            <button type="button" class="hd-password-toggle" data-password-toggle="Input_ConfirmPassword"
+                                    aria-label="Show confirmation password" aria-pressed="false" title="Show confirmation password">
+                                <svg class="hd-eye hd-eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12Z" />
+                                    <circle cx="12" cy="12" r="2.75" />
+                                </svg>
+                                <svg class="hd-eye hd-eye-hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12Z" />
+                                    <circle cx="12" cy="12" r="2.75" />
+                                    <path d="M3 3l18 18" />
+                                </svg>
+                            </button>
+                        </div>
                         <span class="field-validation-error" asp-validation-for="Input.ConfirmPassword"></span>
                     </div>
                 </div>

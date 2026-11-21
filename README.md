@@ -8,13 +8,11 @@ A server-rendered help desk for employees, technicians, and managers, built with
 ![SQL Server](https://img.shields.io/badge/SQL%20Server-Database-CC2927?logo=microsoftsqlserver&logoColor=white)
 ![Bootstrap 5.3](https://img.shields.io/badge/Bootstrap-5.3-7952B3?logo=bootstrap&logoColor=white)
 
+![HelpDesk home page showing the ticket overview](docs/images/helpdesk-home.webp)
+
 **Live demo:** https://helpdeskmvc.runasp.net
 
-| Role | Email | Password |
-|---|---|---|
-| Employee | `demoemployee@helpdesk.com` | `Pass@123` |
-| Technician | `demotechnician@helpdesk.com` | `Pass@123` |
-| Manager | `demomanager@helpdesk.com` | `Pass@123` |
+Sign in with one of the three demo accounts shown on the sign-in page — no setup needed.
 
 ## Features
 
@@ -79,7 +77,7 @@ dotnet ef database update --project HelpDesk.WEB --startup-project HelpDesk.WEB
 dotnet run --project HelpDesk.WEB
 ```
 
-Dev URLs: `https://localhost:7190` / `http://localhost:5141`. Startup seeds the roles, departments, and the three demo accounts above.
+Dev URLs: `https://localhost:7190` / `http://localhost:5141`. Startup seeds the roles, departments, and the three demo accounts whose credentials are shown on the sign-in page.
 
 ## Configuration
 

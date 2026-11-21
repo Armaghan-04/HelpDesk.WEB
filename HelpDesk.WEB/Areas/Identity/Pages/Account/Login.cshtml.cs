@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using HelpDesk.WEB.Data;
 using HelpDesk.WEB.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -17,6 +18,12 @@ namespace HelpDesk.WEB.Areas.Identity.Pages.Account
         public InputModel Input { get; set; } = new();
 
         public string? ReturnUrl { get; set; }
+
+        /// <summary>
+        /// Public demo credentials shown on the sign-in page. They come from the seeder
+        /// so the displayed values always match the accounts that are created.
+        /// </summary>
+        public IReadOnlyList<DemoAccount> DemoAccounts => DemoAccountSeeder.Accounts;
 
         [TempData]
         public string? ErrorMessage { get; set; }

@@ -51,6 +51,61 @@
         });
     }
 
+    // Reveal/hide password inputs (sign-in and registration forms).
+    document.querySelectorAll("[data-password-toggle]").forEach((toggle) => {
+        const input = document.getElementById(toggle.dataset.passwordToggle);
+        if (!input) return;
+
+        toggle.addEventListener("click", () => {
+            const revealing = input.type === "password";
+            input.type = revealing ? "text" : "password";
+
+            const label = revealing ? "Hide password" : "Show password";
+            toggle.setAttribute("aria-pressed", String(revealing));
+            toggle.setAttribute("aria-label", label);
+            toggle.setAttribute("title", label);
+        });
+    });
+
+    // Demo accounts: fill the sign-in form from the selected card.
+    const demoFillStatus = document.getElementById("demo-fill-status");
+    document.querySelectorAll("[data-demo-email]").forEach((card) => {
+        card.addEventListener("click", () => {
+            const email = document.getElementById("Input_Email");
+            const password = document.getElementById("Input_Password");
+            if (!email || !password) return;
+
+            const demoEmail = card.dataset.demoEmail || "";
+            email.value = demoEmail;
+            password.value = card.dataset.demoPassword || "";
+
+            // Let client-side validation react to the programmatic values.
+            [email, password].forEach((field) => {
+                field.dispatchEvent(new Event("input", { bubbles: true }));
+                field.dispatchEvent(new Event("change", { bubbles: true }));
+            });
+
+            // Keep the password hidden after filling, even if it was being revealed.
+            if (password.type === "text") {
+                document
+                    .querySelector(`[data-password-toggle="${password.id}"]`)
+                    ?.click();
+            }
+
+            document.querySelectorAll("[data-demo-email]").forEach((item) => {
+                const selected = item.dataset.demoEmail === demoEmail;
+                item.classList.toggle("is-selected", selected);
+                item.setAttribute("aria-pressed", String(selected));
+            });
+
+            if (demoFillStatus) {
+                demoFillStatus.textContent = `${card.dataset.demoRole || "Demo"} account selected.`;
+            }
+
+            document.getElementById("login-submit")?.focus();
+        });
+    });
+
     // Auto-show server-side flash toasts.
     document.querySelectorAll(".toast").forEach((toast) => new bootstrap.Toast(toast).show());
 })();

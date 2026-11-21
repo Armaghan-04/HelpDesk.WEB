@@ -1,0 +1,39 @@
+@using HelpDesk.WEB.Data
+@using HelpDesk.WEB.Models.Entities
+@model IReadOnlyList<DemoAccount>
+
+<div class="hd-demo-list">
+    @foreach (var account in Model)
+    {
+        var description = account.Role switch
+        {
+            Roles.Employee => "Raise and track your own tickets",
+            Roles.Technician => "Work the tickets assigned to you",
+            Roles.Manager => "Assign work and manage the team",
+            _ => "Explore the help desk"
+        };
+
+        <button type="button"
+                class="hd-demo-card"
+                data-demo-email="@account.Email"
+                data-demo-password="@account.Password"
+                data-demo-role="@account.Role"
+                aria-pressed="false"
+                aria-label="Fill the sign-in form with the @account.Role demo credentials">
+            <span class="hd-demo-card-main">
+                <span class="hd-demo-card-top">
+                    <span class="hd-role-badge is-@account.Role.ToLowerInvariant()">@account.Role</span>
+                    <span class="hd-demo-role-name">@account.Role workspace</span>
+                </span>
+                <span class="hd-demo-desc">@description</span>
+                <span class="hd-demo-cred">
+                    <span class="hd-demo-cred-label">Email</span>
+                    <span class="hd-demo-cred-value">@account.Email</span>
+                    <span class="hd-demo-cred-label">Password</span>
+                    <span class="hd-demo-cred-value">@account.Password</span>
+                </span>
+            </span>
+            <span class="hd-demo-card-action">Use <span aria-hidden="true">&rarr;</span></span>
+        </button>
+    }
+</div>

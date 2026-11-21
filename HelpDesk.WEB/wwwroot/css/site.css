@@ -981,7 +981,376 @@ a {
     line-height: 1.6;
 }
 
-/* ---------- Auth pages ---------- */
+/* ---------- Sign-in page ---------- */
+
+/* Let the sign-in shell occupy all space between the sticky header and footer. */
+.hd-login-page .hd-main {
+    display: flex;
+    flex: 1 1 0;
+    min-height: 0;
+    padding-bottom: 0;
+}
+
+.hd-login-page .hd-main > .container {
+    display: flex;
+    flex: 1 1 0;
+    min-height: 0;
+}
+
+.hd-login {
+    display: grid;
+    grid-template-columns: minmax(0, 1.02fr) minmax(0, .98fr);
+    gap: clamp(1rem, 2vw, 1.75rem);
+    flex: 1 1 0;
+    min-height: 0;
+    padding: clamp(1rem, 2vw, 1.75rem) 0;
+}
+
+/* Keep both panels sized to the space between the header and footer. */
+@media (min-width: 992px) {
+    body.hd-body.hd-login-page {
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+    }
+
+    .hd-login-page .hd-header {
+        flex: 0 0 auto;
+    }
+
+    .hd-login-page .hd-main {
+        overflow: hidden;
+    }
+
+    .hd-login {
+        height: 100%;
+    }
+}
+
+.hd-login-showcase {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    border-radius: var(--hd-radius);
+    background:
+        radial-gradient(circle at 86% 6%, rgba(63, 110, 99, .5), transparent 50%),
+        radial-gradient(circle at 8% 96%, rgba(143, 191, 174, .12), transparent 42%),
+        linear-gradient(160deg, #3B3B39 0%, var(--hd-ink) 52%, #262625 100%);
+    color: var(--hd-paper);
+    box-shadow: var(--hd-shadow);
+}
+
+.hd-login-showcase-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%;
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.hd-login-showcase-inner > .hd-demo {
+    width: 100%;
+    max-width: 30rem;
+}
+
+.hd-demo-intro {
+    display: grid;
+    gap: .35rem;
+    margin-bottom: .35rem;
+}
+
+.hd-login-kicker.hd-login-kicker-light {
+    color: #8FBFAE;
+}
+
+.hd-demo-intro h1 {
+    margin: 0;
+    color: var(--hd-paper);
+    font-family: var(--hd-serif);
+    font-size: clamp(1.55rem, 2.6vw, 2.1rem);
+    font-weight: 600;
+    line-height: 1.12;
+    letter-spacing: -.02em;
+}
+
+.hd-demo-intro p {
+    margin: 0 0 .45rem;
+    max-width: 26rem;
+    color: rgba(244, 243, 238, .68);
+    font-size: .82rem;
+    line-height: 1.55;
+}
+
+.hd-login-form-panel {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    min-height: 0;
+    padding: 0 0 clamp(1.25rem, 4vh, 2.5rem);
+}
+
+.hd-login-form-card {
+    width: 100%;
+    max-width: 420px;
+    padding: clamp(1.25rem, 2.2vw, 1.75rem);
+    border: 1px solid var(--hd-line);
+    border-radius: var(--hd-radius);
+    background: var(--hd-surface);
+    box-shadow: var(--hd-shadow);
+}
+
+.hd-login-form-head {
+    margin-bottom: 1rem;
+}
+
+.hd-login-kicker {
+    display: inline-block;
+    margin-bottom: .35rem;
+    color: var(--hd-accent);
+    font-size: .66rem;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+}
+
+.hd-login-form-head h2 {
+    margin: 0;
+    font-family: var(--hd-serif);
+    font-size: clamp(1.75rem, 2.4vw, 2.15rem);
+    font-weight: 600;
+    line-height: 1.08;
+    letter-spacing: -.025em;
+}
+
+.hd-login-form-head p {
+    margin: .4rem 0 0;
+    color: var(--hd-ink-soft);
+    font-size: .84rem;
+    line-height: 1.55;
+}
+
+.hd-form-alert {
+    margin-bottom: .85rem;
+    padding: .6rem .75rem;
+    border: 1px solid #E5C4B4;
+    border-left-width: 3px;
+    border-radius: var(--hd-radius-sm);
+    background: #F8E9E4;
+    color: var(--hd-danger-deep);
+    font-size: .78rem;
+    line-height: 1.5;
+}
+
+.hd-form-alert ul {
+    margin: 0;
+    padding-left: 1.1rem;
+}
+
+.hd-form-alert.validation-summary-valid {
+    display: none;
+}
+
+.hd-login .form-label {
+    margin-bottom: .25rem;
+    color: var(--hd-ink-soft);
+    font-size: .78rem;
+    font-weight: 700;
+}
+
+.hd-login .form-control {
+    border-color: var(--hd-line);
+    border-radius: var(--hd-radius-sm);
+    background: var(--hd-surface);
+    color: var(--hd-ink);
+    min-height: 2.75rem;
+    padding: .55rem .8rem;
+    font-size: .9rem;
+}
+
+.hd-login .form-control:focus {
+    border-color: var(--hd-accent);
+    box-shadow: 0 0 0 .2rem rgba(63, 110, 99, .14);
+}
+
+.hd-login-field {
+    margin-bottom: .8rem;
+}
+
+.hd-login-label-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: .75rem;
+}
+
+.hd-login-forgot {
+    color: var(--hd-accent-deep);
+    font-size: .76rem;
+    text-decoration: none;
+}
+
+.hd-login-forgot:hover {
+    color: var(--hd-ink);
+    text-decoration: underline;
+}
+
+.hd-login-remember {
+    margin: .9rem 0 1rem;
+    font-size: .82rem;
+}
+
+.hd-login-remember .form-check-label {
+    color: var(--hd-ink-soft);
+}
+
+.hd-login-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    min-height: 2.85rem;
+}
+
+.hd-login-submit .hd-icon {
+    width: 1.05rem;
+    height: 1.05rem;
+    transition: transform .18s ease;
+}
+
+.hd-login-submit:hover .hd-icon {
+    transform: translateX(3px);
+}
+
+.hd-login-create {
+    margin: .9rem 0 0;
+    color: var(--hd-ink-faint);
+    font-size: .78rem;
+    text-align: center;
+}
+
+.hd-login-create a {
+    color: var(--hd-accent-deep);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.hd-login-create a:hover {
+    color: var(--hd-ink);
+    text-decoration: underline;
+}
+
+.hd-login-demo-mobile {
+    margin-top: 1rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--hd-line);
+    border-radius: var(--hd-radius);
+    background: var(--hd-surface);
+    box-shadow: var(--hd-shadow);
+}
+
+.hd-login-demo-mobile > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+    cursor: pointer;
+    list-style: none;
+    color: var(--hd-ink);
+    font-family: var(--hd-serif);
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+.hd-login-demo-mobile > summary::-webkit-details-marker {
+    display: none;
+}
+
+.hd-login-demo-mobile > summary::after {
+    content: "+";
+    color: var(--hd-accent-deep);
+    font-family: var(--hd-sans);
+    font-size: 1.1rem;
+}
+
+.hd-login-demo-mobile[open] > summary::after {
+    content: "\2013";
+}
+
+.hd-login-demo-mobile > .hd-demo {
+    margin-top: 1rem;
+}
+
+.hd-login-demo-count {
+    order: -1;
+    color: var(--hd-ink-faint);
+    font-family: var(--hd-sans);
+    font-size: .66rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+@media (max-width: 991.98px) {
+    .hd-login-page .hd-main {
+        display: block;
+        padding-bottom: 3rem;
+    }
+
+    .hd-login-page .hd-main > .container {
+        display: block;
+    }
+
+    .hd-login {
+        display: block;
+        padding-top: 1.5rem;
+    }
+
+    .hd-login-showcase {
+        display: none;
+    }
+
+    .hd-login-form-panel {
+        display: block;
+        padding: 0;
+    }
+
+    .hd-login-form-card {
+        max-width: none;
+        margin: 0 auto;
+    }
+}
+
+@media (min-width: 992px) and (max-height: 760px) {
+    .hd-login {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    .hd-login-showcase-inner {
+        padding: 1.25rem;
+    }
+
+    .hd-login-form-panel {
+        padding-bottom: 1rem;
+    }
+
+    .hd-login-form-card {
+        padding: 1.25rem;
+    }
+}
+
+@media (min-width: 992px) and (max-height: 700px) {
+    .hd-login-page .hd-navbar {
+        padding-top: .5rem;
+        padding-bottom: .5rem;
+    }
+
+    .hd-login-page .hd-footer {
+        display: none;
+    }
+}
+
+/* ---------- Shared auth pages ---------- */
 
 .hd-auth {
     padding: clamp(1.5rem, 5vw, 4rem) 0 3rem;
@@ -1047,6 +1416,179 @@ a {
 .hd-auth-card {
     height: 100%;
     padding: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+/* Password reveal toggles */
+
+.hd-password-field {
+    position: relative;
+}
+
+.hd-password-field .form-control {
+    padding-right: 2.75rem;
+}
+
+.hd-password-toggle {
+    position: absolute;
+    top: 50%;
+    right: .55rem;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border: 0;
+    border-radius: var(--hd-radius-sm);
+    background: transparent;
+    color: var(--hd-ink-faint);
+    cursor: pointer;
+    transition: color .18s ease, background .18s ease;
+}
+
+.hd-password-toggle:hover,
+.hd-password-toggle[aria-pressed="true"] {
+    color: var(--hd-accent-deep);
+    background: var(--hd-accent-tint);
+}
+
+.hd-password-toggle .hd-eye {
+    width: 1.15rem;
+    height: 1.15rem;
+}
+
+.hd-password-toggle .hd-eye-hidden {
+    display: none;
+}
+
+.hd-password-toggle[aria-pressed="true"] .hd-eye-open {
+    display: none;
+}
+
+.hd-password-toggle[aria-pressed="true"] .hd-eye-hidden {
+    display: block;
+}
+
+/* Demo accounts shown beside the sign-in form */
+
+.hd-demo {
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
+    width: 100%;
+}
+
+.hd-demo.hd-demo-dark {
+    --hd-demo-card-bg: rgba(252, 251, 247, .055);
+    --hd-demo-card-line: rgba(244, 243, 238, .16);
+    --hd-demo-card-hover: rgba(252, 251, 247, .1);
+    --hd-demo-card-selected: rgba(63, 110, 99, .32);
+    --hd-demo-action: #8FBFAE;
+    --hd-demo-text: var(--hd-paper);
+    --hd-demo-muted: rgba(244, 243, 238, .68);
+}
+
+.hd-demo.hd-demo-light {
+    --hd-demo-card-bg: var(--hd-surface);
+    --hd-demo-card-line: var(--hd-line);
+    --hd-demo-card-hover: var(--hd-paper-deep);
+    --hd-demo-card-selected: var(--hd-accent-tint);
+    --hd-demo-action: var(--hd-accent-deep);
+    --hd-demo-text: var(--hd-ink);
+    --hd-demo-muted: var(--hd-ink-soft);
+}
+
+.hd-demo-list {
+    display: grid;
+    gap: .6rem;
+}
+
+.hd-demo-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: .75rem;
+    width: 100%;
+    padding: .85rem 1rem;
+    border: 1px solid var(--hd-demo-card-line);
+    border-radius: var(--hd-radius-sm);
+    background: var(--hd-demo-card-bg);
+    color: var(--hd-demo-text);
+    text-align: left;
+    cursor: pointer;
+    transition: background .18s ease, border-color .18s ease, transform .18s ease;
+}
+
+.hd-demo-card:hover {
+    background: var(--hd-demo-card-hover);
+    border-color: var(--hd-demo-action);
+    transform: translateY(-1px);
+}
+
+.hd-demo-card.is-selected {
+    background: var(--hd-demo-card-selected);
+    border-color: var(--hd-demo-action);
+}
+
+.hd-demo-card-main {
+    display: grid;
+    gap: .3rem;
+    min-width: 0;
+}
+
+.hd-demo-card-top {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .45rem;
+}
+
+.hd-demo-card-top .hd-role-badge {
+    margin-right: 0;
+}
+
+.hd-demo-role-name {
+    font-size: .86rem;
+    font-weight: 700;
+}
+
+.hd-demo-desc {
+    color: var(--hd-demo-muted);
+    font-size: .74rem;
+    line-height: 1.35;
+}
+
+.hd-demo-cred {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: baseline;
+    gap: .2rem .55rem;
+}
+
+.hd-demo-cred-label {
+    color: var(--hd-demo-muted);
+    font-size: .6rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+.hd-demo-cred-value {
+    overflow-wrap: anywhere;
+    color: var(--hd-demo-text);
+    font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+    font-size: .73rem;
+}
+
+.hd-demo-card-action {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    color: var(--hd-demo-action);
+    font-size: .74rem;
+    font-weight: 700;
+    white-space: nowrap;
 }
 
 .hd-role-badge {
@@ -1278,21 +1820,6 @@ a {
     font-weight: 600;
     line-height: 1.05;
     letter-spacing: -.025em;
-}
-
-.hd-identity .hd-main > .container > h1 + .row {
-    margin-bottom: 3rem;
-    padding: 1.5rem;
-    border: 1px solid var(--hd-line);
-    border-radius: var(--hd-radius);
-    background: var(--hd-surface);
-    box-shadow: var(--hd-shadow);
-}
-
-.hd-identity .hd-main > .container > h1 + .row h3 {
-    margin-bottom: .75rem;
-    font-family: var(--hd-serif);
-    font-size: 1.25rem;
 }
 
 .hd-identity .hd-main > .container > h1 + p {
